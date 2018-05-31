@@ -8,11 +8,12 @@ const Otsikko = (props) => {
 };
 
 const Sisalto = (props) => {
+    console.log(props);
     return (
         <div>
-            <Osa osa={props.sisalto.o1} tehtavia={props.sisalto.t1} />
-            <Osa osa={props.sisalto.o2} tehtavia={props.sisalto.t2} />
-            <Osa osa={props.sisalto.o3} tehtavia={props.sisalto.t3} />
+            <Osa osa={props.osa1.nimi} tehtavia={props.osa1.tehtavia} />
+            <Osa osa={props.osa2.nimi} tehtavia={props.osa2.tehtavia} />
+            <Osa osa={props.osa3.nimi} tehtavia={props.osa3.tehtavia} />
         </div>
     );
 };
@@ -31,27 +32,25 @@ const Yhteensa = (props) => {
 
 const App = () => {
     const kurssi = 'Half Stack -sovelluskehitys'
-    const osa1 = 'Reactin perusteet'
-    const tehtavia1 = 10
-    const osa2 = 'Tiedonvälitys propseilla'
-    const tehtavia2 = 7
-    const osa3 = 'Komponenttien tila'
-    const tehtavia3 = 14
-
-    const sisalto = {
-        o1: osa1,
-        t1: tehtavia1,
-        o2: osa2,
-        t2: tehtavia2,
-        o3: osa3,
-        t3: tehtavia3
-    };
+    
+    const osa1 = {
+        nimi: 'Reactin perusteet',
+        tehtavia: 10
+    }
+    const osa2 = {
+        nimi: 'Tiedonvälitys propseilla',
+        tehtavia: 7
+    }
+    const osa3 = {
+        nimi: 'Komponenttien tila',
+        tehtavia: 14
+    }
 
     return (
         <div>
             <Otsikko kurssi={kurssi}></Otsikko>
-            <Sisalto sisalto={sisalto}></Sisalto>
-            <Yhteensa tehtavia={tehtavia1 + tehtavia2 + tehtavia3}></Yhteensa>
+            <Sisalto osa1={osa1} osa2={osa2} osa3={osa3}></Sisalto> {/* Ei kovin´ eleganttia mutta kuinka muuten ilman loopia? */}
+            <Yhteensa tehtavia={osa1.tehtavia + osa2.tehtavia + osa3.tehtavia}></Yhteensa>
         </div>
     )
 }
