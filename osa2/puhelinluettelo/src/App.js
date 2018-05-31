@@ -1,4 +1,7 @@
 import React from 'react';
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import PersonList from './components/PersonList'
 
 class App extends React.Component {
   constructor(props) {
@@ -54,40 +57,20 @@ class App extends React.Component {
   }
 
   render() {
-
-    const createdPersons = this.state.persons
-      .filter(person => person.name.toLowerCase().includes(this.state.filter.toLowerCase()))
-      .map(person => {
-        return (<tr key={person.name}>
-          <td>{person.name}</td>
-          <td>{person.number}</td>
-        </tr>)
-      });
-
     return (
       <div>
         <h1>Puhelinluettelo</h1>
-        <div>
-          rajaa näytettäviä: <input value={this.state.filter} onChange={this.handleFilterChange} />
-        </div>
+        <Filter filter={this.state.filter} onFilterChange={this.handleFilterChange}></Filter>
         <h2>Lisää uusi henkilö</h2>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            nimi: <input value={this.state.newName} onChange={this.handleNameChange} />
-          </div>
-          <div>
-            numero: <input value={this.state.newNumber} onChange={this.handleNumberChange} />
-          </div>
-          <div>
-            <button type="submit">lisää</button>
-          </div>
-        </form>
+        <PersonForm
+          onSubmit={this.handleSubmit}
+          onNameChange={this.handleNameChange}
+          onNumberChange={this.handleNumberChange}
+          newName={this.state.newName}
+          newNumber={this.state.newNumber}>
+        </PersonForm>
         <h2>Numerot</h2>
-        <table>
-          <tbody>
-            {createdPersons}
-          </tbody>
-        </table>
+        <PersonList persons={this.state.persons} filter={this.state.filter}></PersonList>
       </div>
     )
   }
