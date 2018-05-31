@@ -29,18 +29,24 @@ const Statistics = (props) => {
 
     return (
         <div>
-            <Statistic text="Hyvä" number={hyva}></Statistic>
-            <Statistic text="Neutraali" number={neutraali}></Statistic>
-            <Statistic text="Huono" number={huono}></Statistic>
-            <Statistic text="Keskiarvo" number={keskiarvo()}></Statistic>
-            <Statistic text="Positiivisia" number={positiivisia()} unit="%"></Statistic>
+            <table>
+                <tbody>
+                    <Statistic text="Hyvä" number={hyva}></Statistic>
+                    <Statistic text="Neutraali" number={neutraali}></Statistic>
+                    <Statistic text="Huono" number={huono}></Statistic>
+                    <Statistic text="Keskiarvo" number={keskiarvo()}></Statistic>
+                    <Statistic text="Positiivisia" number={positiivisia()} unit="%"></Statistic>
+                </tbody>
+            </table>
         </div>
     );
 }
 
 const Statistic = ({ text, number, unit }) => {
     return (
-        <div>{text} {number} {unit}</div>
+        <tr>
+            <td>{text}</td><td>{number} {unit}</td>
+        </tr>
     );
 }
 
