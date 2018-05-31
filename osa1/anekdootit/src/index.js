@@ -3,30 +3,51 @@ import ReactDOM from 'react-dom'
 
 class App extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            selected: 0
-        }
+            selected: 0,
+            votes: {}
+        };
     }
 
     updateAnecdote = () => {
         const rand = Math.floor(Math.random() * this.props.anecdotes.length);
         console.log(rand);
         this.setState({ selected: rand });
-    }
+    };
+
+    addVote = () => {
+        const selectedNum = this.state.selected;
+        const votesCopy = { ...this.state.votes };
+
+        if (selectedNum in votesCopy) {
+            votesCopy[selectedNum] += 1;
+            this.setState({ votes: votesCopy });
+        } else {
+            votesCopy[selectedNum] = 1;
+            this.setState({ votes: votesCopy });
+        }
+    };
 
     render() {
+
+        const votes = this.state.votes[this.state.selected] ? this.state.votes[this.state.selected] : 0;
+
         return (
             <div>
                 <div>
                     {this.props.anecdotes[this.state.selected]}
                 </div>
                 <div>
+                    <button onClick={() => this.addVote()}>vote</button>
                     <button onClick={() => this.updateAnecdote()}>next anecdote</button>
                 </div>
+                <div>
+                    <p>has {votes} votes</p>
+                </div>
             </div>
-        )
-    }
+        );
+    };
 }
 
 const anecdotes = [
