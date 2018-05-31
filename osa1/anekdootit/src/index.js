@@ -31,7 +31,21 @@ class App extends React.Component {
 
     render() {
 
-        const votes = this.state.votes[this.state.selected] ? this.state.votes[this.state.selected] : 0;
+        const votesOfSelected = this.state.votes[this.state.selected] ? this.state.votes[this.state.selected] : 0;
+
+        let mostVotes = {
+            anecdote: "",
+            votes: 0
+        };
+
+        for (let key in this.state.votes) {
+            if (this.state.votes[key] >= mostVotes.votes) {
+                mostVotes = {
+                    anecdote: this.props.anecdotes[key],
+                    votes: this.state.votes[key]
+                };
+            }
+        }
 
         return (
             <div>
@@ -43,8 +57,11 @@ class App extends React.Component {
                     <button onClick={() => this.updateAnecdote()}>next anecdote</button>
                 </div>
                 <div>
-                    <p>has {votes} votes</p>
+                    <p>has {votesOfSelected} votes</p>
                 </div>
+                <h3>anecdote with most votes</h3>
+                <p>{mostVotes.anecdote}</p>
+                <p>has {mostVotes.votes} votes</p>
             </div>
         );
     };
