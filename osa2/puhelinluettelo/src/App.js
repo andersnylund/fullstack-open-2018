@@ -13,15 +13,21 @@ class App extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    if (this.state.newName !== '') {
 
-      const newPerson = { name: this.state.newName };
-      const persons = this.state.persons.concat(newPerson);
+    const existingNames = this.state.persons.map(person => person.name);
+    const nameToAdd = this.state.newName;
 
-      this.setState({ 
-        persons,
-        newName: '' 
-      })
+    if (nameToAdd !== '') {
+      if (!existingNames.includes(nameToAdd)) {
+        const newPerson = { name: nameToAdd };
+        const persons = this.state.persons.concat(newPerson);
+        this.setState({ 
+          persons,
+          newName: ''
+        })
+      } else {
+        alert('Henkilö on jo listassa!')
+      }
     }
   };
 
