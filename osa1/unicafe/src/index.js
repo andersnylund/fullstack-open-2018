@@ -1,6 +1,45 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+const Button = ({ handleClick, text }) => {
+    return (
+        <button onClick={handleClick}>{text}</button>
+    );
+}
+
+const Statistics = (props) => {
+
+    const {hyva, neutraali, huono} = props.stats;
+
+    const keskiarvo = () => {
+        const summa = hyva * 1 + huono * -1;
+        const arvostelut = hyva + neutraali + huono;
+        const keskiarvo = summa / arvostelut;
+        return isNaN(keskiarvo) ? 0 : keskiarvo;
+    };
+
+    const positiivisia = () => {
+        const positiivisia = hyva / (hyva + neutraali + huono);
+        return isNaN(positiivisia) ? 0 : positiivisia * 100;
+    };
+
+    return (
+        <div>
+            <Statistic text="Hyvä" number={hyva}></Statistic>
+            <Statistic text="Neutraali" number={neutraali}></Statistic>
+            <Statistic text="Huono" number={huono}></Statistic>
+            <Statistic text="Keskiarvo" number={keskiarvo()}></Statistic>
+            <Statistic text="Positiivisia" number={positiivisia()} unit="%"></Statistic>
+        </div>
+    );
+}
+
+const Statistic = ({ text, number, unit }) => {
+    return (
+        <div>{text} {number} {unit}</div>
+    );
+}
+
 class App extends React.Component {
 
     constructor(props) {
@@ -14,32 +53,14 @@ class App extends React.Component {
 
     render() {
 
-        const keskiarvo = () => {
-            const { hyva, neutraali, huono } = this.state;
-            const summa = hyva * 1 + huono * -1;
-            const arvostelut = hyva + neutraali + huono;
-            const keskiarvo = summa / arvostelut;
-            return isNaN(keskiarvo) ? 0 : keskiarvo;
-        };
-
-        const positiivisia = () => {
-            const { hyva, neutraali, huono } = this.state;
-            const positiivisia = hyva / (hyva + neutraali + huono);
-            return isNaN(positiivisia) ? 0 : positiivisia * 100;
-        };
-
         return (
             <div>
                 <h1>Anna palautetta</h1>
-                <button onClick={() => this.setState({ hyva: this.state.hyva + 1 })}>Hyvä</button>
-                <button onClick={() => this.setState({ neutraali: this.state.neutraali + 1 })}>Neutraali</button>
-                <button onClick={() => this.setState({ huono: this.state.huono + 1 })}>Huono</button>
+                <Button handleClick={() => this.setState({ hyva: this.state.hyva + 1 })} text="Hyvä" />
+                <Button handleClick={() => this.setState({ neutraali: this.state.neutraali + 1 })} text="Neutraali" />
+                <Button handleClick={() => this.setState({ huono: this.state.huono + 1 })} text="Huono" />
                 <h2>Statistiikka</h2>
-                <div>Hyvä {this.state.hyva}</div>
-                <div>Neutraali {this.state.neutraali}</div>
-                <div>Huono {this.state.huono}</div>
-                <div>Keskiarvo {keskiarvo()}</div>
-                <div>Positiivisia {positiivisia()} %</div>
+                <Statistics stats={this.state}></Statistics>
             </div>
         );
     }
