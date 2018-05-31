@@ -12,7 +12,7 @@ const Yhteensa = ({ osat }) => {
     
     return (
         <div>
-            <p>yhteensä {countAll()}</p>
+            <p>yhteensä {countAll()} tehtävää</p>
         </div>
     );
 }
