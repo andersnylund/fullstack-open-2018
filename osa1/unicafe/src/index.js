@@ -14,6 +14,20 @@ class App extends React.Component {
 
     render() {
 
+        const keskiarvo = () => {
+            const { hyva, neutraali, huono } = this.state;
+            const summa = hyva * 1 + huono * -1;
+            const arvostelut = hyva + neutraali + huono;
+            const keskiarvo = summa / arvostelut;
+            return isNaN(keskiarvo) ? 0 : keskiarvo;
+        };
+
+        const positiivisia = () => {
+            const { hyva, neutraali, huono } = this.state;
+            const positiivisia = hyva / (hyva + neutraali + huono);
+            return isNaN(positiivisia) ? 0 : positiivisia * 100;
+        };
+
         return (
             <div>
                 <h1>Anna palautetta</h1>
@@ -24,6 +38,8 @@ class App extends React.Component {
                 <div>Hyvä {this.state.hyva}</div>
                 <div>Neutraali {this.state.neutraali}</div>
                 <div>Huono {this.state.huono}</div>
+                <div>Keskiarvo {keskiarvo()}</div>
+                <div>Positiivisia {positiivisia()} %</div>
             </div>
         );
     }
