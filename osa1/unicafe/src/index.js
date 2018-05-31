@@ -23,6 +23,10 @@ const Statistics = (props) => {
         return isNaN(positiivisia) ? 0 : positiivisia * 100;
     };
 
+    if (hyva === 0 && neutraali === 0 && huono === 0) {
+        return <div>ei yhtään palautetta annettu</div>
+    }
+
     return (
         <div>
             <Statistic text="Hyvä" number={hyva}></Statistic>
