@@ -9,7 +9,7 @@ const Button = ({ handleClick, text }) => {
 
 const Statistics = (props) => {
 
-    const {hyva, neutraali, huono} = props.stats;
+    const { hyva, neutraali, huono } = props.stats;
 
     const keskiarvo = () => {
         const summa = hyva * 1 + huono * -1;
@@ -55,14 +55,20 @@ class App extends React.Component {
         }
     }
 
+    setFieldValue = (field, value) => {
+        return () => {
+            this.setState({ [field]: value })
+        };
+    };
+
     render() {
 
         return (
             <div>
                 <h1>Anna palautetta</h1>
-                <Button handleClick={() => this.setState({ hyva: this.state.hyva + 1 })} text="Hyvä" />
-                <Button handleClick={() => this.setState({ neutraali: this.state.neutraali + 1 })} text="Neutraali" />
-                <Button handleClick={() => this.setState({ huono: this.state.huono + 1 })} text="Huono" />
+                <Button handleClick={this.setFieldValue("hyva", this.state.hyva + 1)} text="Hyvä" />
+                <Button handleClick={this.setFieldValue("neutraali", this.state.neutraali + 1)} text="Neutraali" />
+                <Button handleClick={this.setFieldValue("huono", this.state.huono + 1)} text="Huono" />
                 <h2>Statistiikka</h2>
                 <Statistics stats={this.state}></Statistics>
             </div>
