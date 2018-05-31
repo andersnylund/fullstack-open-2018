@@ -9,7 +9,17 @@ const Otsikko = (props) => {
 
 const Sisalto = (props) => {
     return (
-        props.sisalto
+        <div>
+            <Osa osa={props.sisalto.o1} tehtavia={props.sisalto.t1} />
+            <Osa osa={props.sisalto.o2} tehtavia={props.sisalto.t2} />
+            <Osa osa={props.sisalto.o3} tehtavia={props.sisalto.t3} />
+        </div>
+    );
+};
+
+const Osa = (props) => {
+    return (
+        <p>{props.osa} {props.tehtavia}</p>
     );
 };
 
@@ -28,12 +38,14 @@ const App = () => {
     const osa3 = 'Komponenttien tila'
     const tehtavia3 = 14
 
-    const sisalto =
-        <div>
-            <p>{osa1} {tehtavia1}</p>
-            <p>{osa2} {tehtavia2}</p>
-            <p>{osa3} {tehtavia3}</p>
-        </div>
+    const sisalto = {
+        o1: osa1,
+        t1: tehtavia1,
+        o2: osa2,
+        t2: tehtavia2,
+        o3: osa3,
+        t3: tehtavia3
+    };
 
     return (
         <div>
