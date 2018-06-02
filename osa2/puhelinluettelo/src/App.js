@@ -2,7 +2,7 @@ import React from 'react';
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PersonList from './components/PersonList'
-import axios from 'axios'
+import personService from './services/personService'
 
 class App extends React.Component {
   constructor(props) {
@@ -16,10 +16,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        this.setState({ persons: response.data })
+    personService.getAll()
+      .then(persons => {
+        this.setState({ persons })
+      })
+      .catch(error => {
+        alert(error)
       })
   }
 
@@ -32,16 +34,25 @@ class App extends React.Component {
 
     if (nameToAdd !== '') {
       if (!existingNames.includes(nameToAdd)) {
+
         const newPerson = {
           name: nameToAdd,
           number: numberToAdd
-        };
-        const persons = this.state.persons.concat(newPerson);
-        this.setState({
-          persons,
-          newName: '',
-          newNumber: ''
-        })
+        }
+
+        personService.create(newPerson)
+          .then(p => {
+            const persons = this.state.persons.concat(p);
+            this.setState({
+              persons,
+              newName: '',
+              newNumber: ''
+            })
+          })
+          .catch(error => {
+            alert(error)
+          })
+
       } else {
         alert('Henkilö on jo listassa!')
       }
