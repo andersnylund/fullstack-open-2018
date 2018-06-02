@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CountryList = ({ countries }) => {
+const CountryList = ({ countries, onClick }) => {
     
     if (countries.length > 10) {
         return (
@@ -10,8 +10,8 @@ const CountryList = ({ countries }) => {
 
     const mapped = countries.map(country => {
         return (
-            <tr key={country.alpha3Code}>
-                <td >{country.name}</td>
+            <tr key={country.alpha3Code} country={country} onClick={(e) => onClick(e, country)}>
+                <td>{country.name}</td>
             </tr>
         )
     })

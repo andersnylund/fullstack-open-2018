@@ -37,11 +37,21 @@ class App extends Component {
     })
   }
 
+  handleCountryClick = (event, country) => {
+    console.log(country)
+    this.setState({
+      filteredCountries: [country]
+    })
+  }
+
   content = () => {
     if (this.state.allCountries.length === 0) {
       return (<p>loading...</p>)
     } else if (this.state.filteredCountries.length > 1) {
-      return (<CountryList countries={this.state.filteredCountries}></CountryList>)
+      return (<CountryList 
+                countries={this.state.filteredCountries}
+                onClick={this.handleCountryClick}>
+              </CountryList>)
     } else if (this.state.filteredCountries.length === 0) {
       return (<p>no results</p>)
     } else {
