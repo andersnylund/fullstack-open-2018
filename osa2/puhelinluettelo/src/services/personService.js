@@ -14,8 +14,13 @@ const create = (person) => {
 		.then(_dataMapper)
 }
 
+const remove = (id) => {
+	return axios
+		.delete(`${baseUrl}/${id}`)
+}
+
 const _dataMapper = (response) => {
 	return response.data
 }
 
-export default { getAll, create }
+export default { getAll, create, remove }

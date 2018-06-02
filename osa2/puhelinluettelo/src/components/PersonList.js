@@ -1,23 +1,27 @@
 import React from 'react'
+import Person from './Person'
 
-const PersonList = ({ persons, filter }) => {
+const PersonList = ({ people, filter, onClickDelete }) => {
 
-    const createdPersons = persons
-      .filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-      .map(person => {
-        return (<tr key={person.name}>
-          <td>{person.name}</td>
-          <td>{person.number}</td>
-        </tr>)
-      });
+  const createdPeople = people
+    .filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+    .map(person => {
+      return (
+        <Person
+          key={person.id}
+          person={person}
+          onClickDelete={onClickDelete}>
+        </Person>
+      )
+    })
 
-    return ( 
-        <table>
-          <tbody>
-            {createdPersons}
-          </tbody>
-        </table>
-    )
+  return (
+    <table>
+      <tbody>
+        {createdPeople}
+      </tbody>
+    </table>
+  )
 }
 
 export default PersonList

@@ -8,7 +8,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [],
+      people: [],
       newName: '',
       newNumber: '',
       filter: ''
@@ -17,8 +17,8 @@ class App extends React.Component {
 
   componentDidMount() {
     personService.getAll()
-      .then(persons => {
-        this.setState({ persons })
+      .then(people => {
+        this.setState({ people })
       })
       .catch(error => {
         alert(error)
@@ -28,7 +28,7 @@ class App extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
-    const existingNames = this.state.persons.map(person => person.name);
+    const existingNames = this.state.people.map(person => person.name);
     const nameToAdd = this.state.newName;
     const numberToAdd = this.state.newNumber;
 
@@ -42,9 +42,9 @@ class App extends React.Component {
 
         personService.create(newPerson)
           .then(p => {
-            const persons = this.state.persons.concat(p);
+            const people = this.state.people.concat(p);
             this.setState({
-              persons,
+              people,
               newName: '',
               newNumber: ''
             })
@@ -52,12 +52,28 @@ class App extends React.Component {
           .catch(error => {
             alert(error)
           })
-
       } else {
         alert('Henkilö on jo listassa!')
       }
     }
   };
+
+  handleDelete = (id) => {
+    return () => {
+      const person = this.state.people.find(p => p.id === id)
+      if (window.confirm(`Poistetaanko ${person.name} ?`)) {
+        personService.remove(id)
+          .then(p => {
+            this.setState({
+              people: this.state.people.filter(p => p.id !== id)
+            })
+          })
+          .catch(error => {
+            alert(error)
+          })
+      }
+    }
+  }
 
   handleNameChange = (event) => {
     this.setState({ newName: event.target.value })
@@ -75,7 +91,10 @@ class App extends React.Component {
     return (
       <div>
         <h1>Puhelinluettelo</h1>
-        <Filter filter={this.state.filter} onFilterChange={this.handleFilterChange}></Filter>
+        <Filter
+          filter={this.state.filter}
+          onFilterChange={this.handleFilterChange}>
+        </Filter>
         <h2>Lisää uusi henkilö</h2>
         <PersonForm
           onSubmit={this.handleSubmit}
@@ -85,7 +104,11 @@ class App extends React.Component {
           newNumber={this.state.newNumber}>
         </PersonForm>
         <h2>Numerot</h2>
-        <PersonList persons={this.state.persons} filter={this.state.filter}></PersonList>
+        <PersonList
+          people={this.state.people}
+          filter={this.state.filter}
+          onClickDelete={this.handleDelete}>
+        </PersonList>
       </div>
     )
   }
