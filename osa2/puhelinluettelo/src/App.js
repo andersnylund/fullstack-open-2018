@@ -34,12 +34,10 @@ class App extends React.Component {
 
     if (nameToAdd !== '') {
       if (!existingNames.includes(nameToAdd)) {
-
         const newPerson = {
           name: nameToAdd,
           number: numberToAdd
         }
-
         personService.create(newPerson)
           .then(p => {
             const people = this.state.people.concat(p);
@@ -52,8 +50,20 @@ class App extends React.Component {
           .catch(error => {
             alert(error)
           })
-      } else {
-        alert('Henkilö on jo listassa!')
+      } else if (window.confirm(`${nameToAdd} on jo luettelossa, korvataako vanha numero uudella?`)) {
+        let updatedPerson = this.state.people.find(p => p.name === nameToAdd)
+        updatedPerson.number = this.state.newNumber
+        personService.update(updatedPerson)
+          .then(person => {
+            this.setState({
+              people: this.state.people.map(p => p.id === updatedPerson.id ? updatedPerson : p),
+              newName: '',
+              newNumber: ''
+            })
+          })
+          .catch(error => {
+            alert(error)
+          })
       }
     }
   };
@@ -61,7 +71,7 @@ class App extends React.Component {
   handleDelete = (id) => {
     return () => {
       const person = this.state.people.find(p => p.id === id)
-      if (window.confirm(`Poistetaanko ${person.name} ?`)) {
+      if (window.confirm(`Poistetaanko '${person.name}'?`)) {
         personService.remove(id)
           .then(p => {
             this.setState({

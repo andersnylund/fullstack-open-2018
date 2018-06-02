@@ -17,10 +17,17 @@ const create = (person) => {
 const remove = (id) => {
 	return axios
 		.delete(`${baseUrl}/${id}`)
+		.then(_dataMapper)
+}
+
+const update = (person) => {
+	return axios
+		.put(`${baseUrl}/${person.id}`, person)
+		.then(_dataMapper)
 }
 
 const _dataMapper = (response) => {
 	return response.data
 }
 
-export default { getAll, create, remove }
+export default { getAll, create, update, remove }
