@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PersonList from './components/PersonList'
 import personService from './services/personService'
+import Notification from './components/Notification'
 
 class App extends React.Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class App extends React.Component {
       people: [],
       newName: '',
       newNumber: '',
-      filter: ''
+      filter: '',
+      notification: null
     }
   }
 
@@ -21,7 +23,7 @@ class App extends React.Component {
         this.setState({ people })
       })
       .catch(error => {
-        alert(error)
+        this.notify(true, 'Yhteysongelma')
       })
   }
 
@@ -46,9 +48,10 @@ class App extends React.Component {
               newName: '',
               newNumber: ''
             })
+            this.notify(false, `Henkilö ${p.name} lisättiin`)
           })
           .catch(error => {
-            alert(error)
+            this.notify(true, 'Yhteysongelma')
           })
       } else if (window.confirm(`${nameToAdd} on jo luettelossa, korvataako vanha numero uudella?`)) {
         let updatedPerson = this.state.people.find(p => p.name === nameToAdd)
@@ -60,9 +63,10 @@ class App extends React.Component {
               newName: '',
               newNumber: ''
             })
+            this.notify(false, `Päivitettiin henkilö ${nameToAdd}`)
           })
           .catch(error => {
-            alert(error)
+            this.notify(true, 'Yhteysongelma')
           })
       }
     }
@@ -77,9 +81,10 @@ class App extends React.Component {
             this.setState({
               people: this.state.people.filter(p => p.id !== id)
             })
+            this.notify(false, `Poistettiin ${person.name}`)
           })
           .catch(error => {
-            alert(error)
+            this.notify(true, 'Yhteysongelma')
           })
       }
     }
@@ -95,6 +100,13 @@ class App extends React.Component {
 
   handleFilterChange = (event) => {
     this.setState({ filter: event.target.value })
+  }
+
+  notify = (isError, message) => {
+    this.setState({ notification: { isError, message } })
+    setTimeout(() => {
+      this.setState({ notification: null })
+    }, 3000)
   }
 
   render() {
@@ -119,6 +131,7 @@ class App extends React.Component {
           filter={this.state.filter}
           onClickDelete={this.handleDelete}>
         </PersonList>
+        <Notification notification={this.state.notification} />
       </div>
     )
   }

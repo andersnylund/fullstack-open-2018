@@ -12,8 +12,13 @@
     },
     {
       "name": "Arto Lahtinen",
-      "number": "123",
+      "number": "040-123456",
       "id": 5
+    },
+    {
+      "name": "Alice",
+      "number": "123",
+      "id": 6
     }
   ]
 }
