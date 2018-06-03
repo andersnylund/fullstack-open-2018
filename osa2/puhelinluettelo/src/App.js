@@ -66,7 +66,12 @@ class App extends React.Component {
             this.notify(false, `Päivitettiin henkilö ${nameToAdd}`)
           })
           .catch(error => {
-            this.notify(true, 'Yhteysongelma')
+            if (error.response.status === 404) {
+              this.setState({people: this.state.people.filter(p => p.id !== updatedPerson.id)})
+              this.notify(true, 'Muokattava henkilö oli jo poistettu')
+            } else {
+              this.notify(true, 'Yhteysongelma')
+            }
           })
       }
     }
