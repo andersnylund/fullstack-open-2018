@@ -1,4 +1,4 @@
-const dummy = (blogs) => {
+const dummy = () => {
   return 1;
 };
 
@@ -12,7 +12,18 @@ const totalLikes = (blogs) => {
   }
 };
 
+const favoriteBlog = (blogs) => {
+  if (blogs === null || blogs === undefined) {
+    return null;
+  } else if (blogs.length === 0) {
+    return null;
+  } else {
+    return blogs.reduce((prev, curr) => prev.likes < curr.likes ? curr : prev);
+  }
+};
+
 module.exports = {
   dummy,
   totalLikes,
+  favoriteBlog,
 };
