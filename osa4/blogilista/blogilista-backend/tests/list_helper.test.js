@@ -75,7 +75,7 @@ describe('total likes', () => {
 });
 
 describe('blog with most likes', () => {
-  test('when providing all blogs', () => {
+  test('when providing multiple blogs', () => {
     const result = listHelper.favoriteBlog(blogs);
     const expected = {
       _id: '5a422b3a1b54a676234d17f9',
@@ -110,5 +110,34 @@ describe('blog with most likes', () => {
   test('when providing null', () => {
     const result = listHelper.favoriteBlog(null);
     expect(result).toBe(null);
+  });
+});
+
+describe('author with most blogs', () => {
+  test('when providing multiple blogs', () => {
+    const result = listHelper.mostBlogs(blogs);
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3,
+    });
+  });
+  test('when providing one blog', () => {
+    const result = listHelper.mostBlogs([].concat(blogs[0]));
+    expect(result).toEqual({
+      author: 'Michael Chan',
+      blogs: 1,
+    });
+  });
+  test('when providing empty list', () => {
+    const result = listHelper.mostBlogs([]);
+    expect(result).toEqual(null);
+  });
+  test('when providing null', () => {
+    const result = listHelper.mostBlogs(null);
+    expect(result).toEqual(null);
+  });
+  test('when providing undefined', () => {
+    const result = listHelper.mostBlogs(undefined);
+    expect(result).toEqual(null);
   });
 });
