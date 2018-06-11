@@ -141,3 +141,32 @@ describe('author with most blogs', () => {
     expect(result).toEqual(null);
   });
 });
+
+describe('author with most likes combined', () => {
+  test('when providing multiple blogs', () => {
+    const result = listHelper.mostLikes(blogs);
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 17,
+    });
+  });
+  test('when providing one blog', () => {
+    const result = listHelper.mostLikes([].concat(blogs[0]));
+    expect(result).toEqual({
+      author: 'Michael Chan',
+      likes: 7,
+    });
+  });
+  test('when providing empty list', () => {
+    const result = listHelper.mostLikes([]);
+    expect(result).toBe(null);
+  });
+  test('when providing null', () => {
+    const result = listHelper.mostLikes(null);
+    expect(result).toBe(null);
+  });
+  test('when providing undefined', () => {
+    const result = listHelper.mostLikes(undefined);
+    expect(result).toBe(null);
+  });
+});
