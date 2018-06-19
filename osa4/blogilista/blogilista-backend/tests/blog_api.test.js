@@ -63,6 +63,22 @@ describe('when having initial blogs', () => {
     expect(responseAfterSave.body.map(b => b.author)).toContain('Anders Nylund');
     expect(responseAfterSave.body.length).toBe(testBlogs.length + 1);
   });
+
+  test('test if giving no value for likes of new blog defaults to 0', async () => {
+    const newBlog = {
+      title: 'No likes',
+      author: 'Anders Nylund',
+      url: 'http://localhost:3000',
+    };
+
+    const result = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200);
+
+    expect(result.body.likes).toEqual(0);
+
+  });
 });
 
 

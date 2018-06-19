@@ -17,8 +17,14 @@ blogRouter.get('/', async (req, res) => {
 });
 
 blogRouter.post('/', async (req, res) => {
-  const blog = await new Blog(req.body).save();
-  res.json(format(blog));
+
+  const newBlog = req.body;
+  if (newBlog.likes === undefined) {
+    newBlog.likes = 0;
+  }
+
+  const result = await new Blog(newBlog).save();
+  res.json(format(result));
 });
 
 module.exports = blogRouter;

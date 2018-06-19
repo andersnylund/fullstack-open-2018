@@ -4,6 +4,5 @@ Content-Type: application/json
 {
     "title": "Test 4",
     "author": "Me",
-    "url": "http://localhost:1234",
-    "likes": -5
+    "url": "http://localhost:1234"
 }
