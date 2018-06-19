@@ -17,14 +17,16 @@ blogRouter.get('/', async (req, res) => {
 });
 
 blogRouter.post('/', async (req, res) => {
-
   const newBlog = req.body;
   if (newBlog.likes === undefined) {
     newBlog.likes = 0;
   }
+  if (newBlog.title === undefined || newBlog.url === undefined) {
+    return res.status(400).json({ error: 'title or url not specified', });
+  }
 
   const result = await new Blog(newBlog).save();
-  res.json(format(result));
+  return res.json(format(result));
 });
 
 module.exports = blogRouter;

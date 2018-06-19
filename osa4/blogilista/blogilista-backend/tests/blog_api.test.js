@@ -63,22 +63,51 @@ describe('when having initial blogs', () => {
     expect(responseAfterSave.body.map(b => b.author)).toContain('Anders Nylund');
     expect(responseAfterSave.body.length).toBe(testBlogs.length + 1);
   });
+});
 
-  test('test if giving no value for likes of new blog defaults to 0', async () => {
-    const newBlog = {
-      title: 'No likes',
-      author: 'Anders Nylund',
-      url: 'http://localhost:3000',
-    };
+test('test if giving no value for likes of new blog defaults to 0', async () => {
+  const newBlog = {
+    title: 'No likes',
+    author: 'Anders Nylund',
+    url: 'http://localhost:3000',
+  };
 
-    const result = await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(200);
+  const result = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200);
 
-    expect(result.body.likes).toEqual(0);
+  expect(result.body.likes).toEqual(0);
 
-  });
+});
+
+test('assert that posting no title returns 400', async () => {
+  const newBlog = {
+    author: 'Anders Nylund',
+    url: 'http://localhost:3000',
+  };
+
+  const result = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+
+  expect(result.body.error).toEqual('title or url not specified');
+
+});
+
+test('assert that no url returns 400', async () => {
+  const newBlog = {
+    author: 'Anders Nylund',
+    title: 'no url',
+  };
+
+  const result = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+
+  expect(result.body.error).toEqual('title or url not specified');
 });
 
 
