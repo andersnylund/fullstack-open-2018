@@ -9,10 +9,9 @@ const format = (blog) => ({
   likes: blog.likes,
 });
 
-blogRouter.get('/', (req, res) => {
-  Blog
-    .find({})
-    .then(blogs => res.json(blogs.map(format)));
+blogRouter.post('/', async (req, res) => {
+  const newBlog = await new Blog(req.body).save();
+  return res.json(format(newBlog));
 });
 
 blogRouter.post('/', (req, res) => {
