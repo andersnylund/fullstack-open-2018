@@ -1,7 +1,7 @@
 const listHelper = require('../utils/list_helper');
 const blogs = require('./test_blogs');
 
-describe.skip('list helpers', () => {
+describe('list helpers', () => {
   test('dummy is called', () => {
     const blogs = [];
     const result = listHelper.dummy(blogs);

@@ -19,8 +19,8 @@ beforeAll(async () => {
   }
 });
 
-describe('api tests for blogs', () => {
-  test('test if returns valid json', async () => {
+describe('when having initial blogs', () => {
+  test('test if get all returns valid json', async () => {
     const response = await api
       .get('/api/blogs')
       .expect(200)
@@ -29,7 +29,7 @@ describe('api tests for blogs', () => {
     expect(response.body.length).toBe(testBlogs.length);
   });
 
-  test('test if first elemement is correct', async () => {
+  test('test if get all returns first elemement correct', async () => {
     const response = await api
       .get('/api/blogs');
 
@@ -40,6 +40,28 @@ describe('api tests for blogs', () => {
       title: 'React patterns',
       url: 'https://reactpatterns.com/',
     });
+  });
+
+  test('test if adding a blog is possible', async () => {
+    const newBlog = {
+      title: 'My blog',
+      author: 'Anders Nylund',
+      url: 'http://localhost:3000',
+      likes: 10000,
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200);
+
+    const responseAfterSave = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    expect(responseAfterSave.body.map(b => b.author)).toContain('Anders Nylund');
+    expect(responseAfterSave.body.length).toBe(testBlogs.length + 1);
   });
 });
 
