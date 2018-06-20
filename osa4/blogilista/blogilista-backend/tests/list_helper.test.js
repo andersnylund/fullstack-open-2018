@@ -1,5 +1,5 @@
 const listHelper = require('../utils/list_helper');
-const blogs = require('./test_blogs');
+const { initialBlogs, } = require('./test_helper');
 
 describe('list helpers', () => {
   test('dummy is called', () => {
@@ -10,12 +10,12 @@ describe('list helpers', () => {
 
   describe('total likes', () => {
     test('when list has multiple blogs', () => {
-      const result = listHelper.totalLikes(blogs);
+      const result = listHelper.totalLikes(initialBlogs);
       expect(result).toBe(36);
     });
 
     test('when list has one blog', () => {
-      const result = listHelper.totalLikes([].concat(blogs[0]));
+      const result = listHelper.totalLikes([].concat(initialBlogs[0]));
       expect(result).toBe(7);
     });
 
@@ -27,26 +27,22 @@ describe('list helpers', () => {
 
   describe('blog with most likes', () => {
     test('when providing multiple blogs', () => {
-      const result = listHelper.favoriteBlog(blogs);
+      const result = listHelper.favoriteBlog(initialBlogs);
       const expected = {
-        _id: '5a422b3a1b54a676234d17f9',
         title: 'Canonical string reduction',
         author: 'Edsger W. Dijkstra',
         url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
         likes: 12,
-        __v: 0,
       };
       expect(result).toEqual(expected);
     });
     test('when providing one blog', () => {
-      const result = listHelper.favoriteBlog([].concat(blogs[0]));
+      const result = listHelper.favoriteBlog([].concat(initialBlogs[0]));
       const expected = {
-        _id: '5a422a851b54a676234d17f7',
         title: 'React patterns',
         author: 'Michael Chan',
         url: 'https://reactpatterns.com/',
         likes: 7,
-        __v: 0,
       };
       expect(result).toEqual(expected);
     });
@@ -66,14 +62,14 @@ describe('list helpers', () => {
 
   describe('author with most blogs', () => {
     test('when providing multiple blogs', () => {
-      const result = listHelper.mostBlogs(blogs);
+      const result = listHelper.mostBlogs(initialBlogs);
       expect(result).toEqual({
         author: 'Robert C. Martin',
         blogs: 3,
       });
     });
     test('when providing one blog', () => {
-      const result = listHelper.mostBlogs([].concat(blogs[0]));
+      const result = listHelper.mostBlogs([].concat(initialBlogs[0]));
       expect(result).toEqual({
         author: 'Michael Chan',
         blogs: 1,
@@ -95,14 +91,14 @@ describe('list helpers', () => {
 
   describe('author with most likes combined', () => {
     test('when providing multiple blogs', () => {
-      const result = listHelper.mostLikes(blogs);
+      const result = listHelper.mostLikes(initialBlogs);
       expect(result).toEqual({
         author: 'Edsger W. Dijkstra',
         likes: 17,
       });
     });
     test('when providing one blog', () => {
-      const result = listHelper.mostLikes([].concat(blogs[0]));
+      const result = listHelper.mostLikes([].concat(initialBlogs[0]));
       expect(result).toEqual({
         author: 'Michael Chan',
         likes: 7,
