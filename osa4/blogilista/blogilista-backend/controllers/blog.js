@@ -29,4 +29,14 @@ blogRouter.post('/', async (req, res) => {
   return res.json(format(result));
 });
 
+blogRouter.delete('/:id', async (req, res) => {
+  try {
+    await Blog.findByIdAndRemove(req.params.id);
+    return res.status(204).end();
+  } catch (exception) {
+    console.log(exception);
+    return res.status(400).json({ error: 'malformed id', });
+  }
+});
+
 module.exports = blogRouter;

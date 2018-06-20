@@ -114,6 +114,19 @@ describe('when having initial blogs', () => {
     expect(result.body.error).toEqual('title or url not specified');
   });
 
+  test('assert that deleting a blog is possible', async () => {
+    const blogsBefore = await blogsInDB();
+
+    await api
+      .delete(`/api/blogs/${blogsBefore[0].id}`)
+      .expect(204);
+
+    const blogsAfter = await blogsInDB();
+
+    expect(blogsAfter).not.toContain(blogsBefore[0]);
+    expect(blogsAfter.length).toBe(blogsBefore.length - 1);
+  });
+
   afterAll(() => {
     server.close();
   });
