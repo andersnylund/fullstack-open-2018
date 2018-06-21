@@ -1,16 +1,6 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
 
-const format = (blog) => {
-  return {
-    id: blog._id,
-    title: blog.title,
-    author: blog.author,
-    url: blog.url,
-    likes: blog.likes,
-  };
-};
-
 const blogIsValid = (blog) => {
   return blog.title !== null && blog.title !== undefined &&
     blog.url !== null && blog.url !== undefined;
@@ -18,7 +8,7 @@ const blogIsValid = (blog) => {
 
 blogRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({});
-  return res.json(blogs.map(format));
+  return res.json(blogs.map(Blog.format));
 });
 
 blogRouter.post('/', async (req, res) => {
@@ -33,7 +23,7 @@ blogRouter.post('/', async (req, res) => {
   }
 
   const result = await new Blog(newBlog).save();
-  return res.status(201).json(format(result));
+  return res.status(201).json(Blog.format(result));
 });
 
 blogRouter.delete('/:id', async (req, res) => {
@@ -66,7 +56,11 @@ blogRouter.put('/:id', async (req, res) => {
     const result = await Blog.findByIdAndUpdate(req.params.id, newBlog, {
       new: true,
     });
-    return res.json(result);
+    if (result) {
+      return res.json(result);
+    } else {
+      return res.status(404).json({ error: 'not found', });
+    }
   } catch (exception) {
     console.log(exception);
     return res.status(400).json({

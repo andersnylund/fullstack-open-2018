@@ -7,7 +7,6 @@ const api = supertest(app);
 const {
   blogsInDB,
   initialBlogs,
-  format,
 } = require('./test_helper');
 const Blog = require('../models/blog');
 
@@ -146,12 +145,26 @@ describe('when having initial blogs', () => {
       .send(modifiedBlog)
       .expect(200);
 
-    expect(JSON.stringify(format(result.body)))
+    expect(JSON.stringify(Blog.format(result.body)))
       .toEqual(JSON.stringify(modifiedBlog));
 
     const blogAfter = (await blogsInDB())[0];
 
     expect(blogAfter).toMatchObject(modifiedBlog);
+  });
+
+  test('assert that updating blog with valid but non existing id returns 404', async () => {
+    const newBlog = {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2,
+    };
+
+    const id = '5b2a8be6326da83db9b3e62d';
+    await api.put(`/api/blogs/${id}`)
+      .send(newBlog)
+      .expect(404);
   });
 
   test('assert that updating with malformed id returns 400', async () => {

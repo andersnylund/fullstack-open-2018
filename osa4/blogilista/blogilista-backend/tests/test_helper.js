@@ -39,23 +39,12 @@ const initialBlogs = [
   },
 ];
 
-const format = (blog) => {
-  return {
-    id: blog._id,
-    title: blog.title,
-    author: blog.author,
-    url: blog.url,
-    likes: blog.likes,
-  };
-};
-
 const blogsInDB = async () => {
   const blogs = await Blog.find({});
-  return blogs.map(format);
+  return blogs.map(Blog.format);
 };
 
 module.exports = {
   initialBlogs,
   blogsInDB,
-  format,
 };
