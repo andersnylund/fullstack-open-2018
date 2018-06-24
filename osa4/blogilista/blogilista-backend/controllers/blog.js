@@ -31,7 +31,8 @@ blogRouter.delete('/:id', async (req, res) => {
     await Blog.findByIdAndRemove(req.params.id);
     return res.status(204).end();
   } catch (exception) {
-    console.log(exception);
+    // TODO find out how to log only if profile not 'test'
+    // console.log(exception);
     return res.status(400).json({
       error: 'malformed id',
     });
@@ -62,7 +63,8 @@ blogRouter.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'not found', });
     }
   } catch (exception) {
-    console.log(exception);
+    // TODO find out how to log only if profile not 'test'
+    // console.log(exception);
     return res.status(400).json({
       error: 'malformed id',
     });

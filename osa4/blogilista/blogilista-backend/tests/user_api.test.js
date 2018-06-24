@@ -10,100 +10,123 @@ const {
   usersInDB,
 } = require('./test_helper');
 
-describe('having no any initial users', async () => {
+describe('testing user api', () => {
+  describe('when having no initial users', async () => {
 
-  beforeEach(async () => {
-    await User.remove({});
+    beforeEach(async () => {
+      await User.remove({});
+    });
+
+    test('assert that saving user is possible', async () => {
+
+      const newUser = {
+        username: 'user',
+        password: 'password',
+        adult: true,
+      };
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(result.body).toHaveProperty('id');
+      expect(result.body.username).toEqual('user');
+      expect(result.body.adult).toEqual(true);
+      expect(result.body).not.toHaveProperty('password');
+
+      const savedUsers = await usersInDB();
+
+      expect(savedUsers.length).toBe(1);
+    });
+
+    test('assert that saving user without username fails', async () => {
+      const newUser = {
+        password: 'password',
+        adult: true,
+      };
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400);
+    });
+
+    test('assert that saving user without password fails', async () => {
+      const newUser = {
+        username: 'user',
+        adult: true,
+      };
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400);
+    });
+
+    test('assert that saving user without \'adult\'-property defaults to true', async () => {
+      const newUser = {
+        username: 'username',
+        password: 'password',
+      };
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(200);
+
+      expect(result.body.adult).toBe(true);
+    });
+
   });
 
-  test('assert that saving user is possible', async () => {
+  describe('having initial users', async () => {
 
-    const newUser = {
-      username: 'user',
-      password: 'password',
-      authorative: true,
-    };
+    beforeEach(async () => {
+      await User.remove({});
+      const userPromises = initialUsers.map(u => new User(u).save());
+      await Promise.all(userPromises);
+    });
 
-    const result = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
+    test('assert that getting all users is possible', async () => {
+      const usersBefore = await usersInDB();
+      const result = await api
+        .get('/api/users')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
 
-    expect(result.body).toHaveProperty('id');
-    expect(result.body.username).toEqual('user');
-    expect(result.body.authorative).toEqual(true);
-    expect(result.body).not.toHaveProperty('password');
+      expect(usersBefore.length).toEqual(result.body.length);
+    });
 
-    const savedUsers = await usersInDB();
+    test('assert that password can not be shorter than 3 characters', async () => {
+      const result = await api
+        .post('/api/users')
+        .send({
+          username: 'username',
+          password: '12',
+        })
+        .expect(400);
 
-    expect(savedUsers.length).toBe(1);
+      expect(result.body).toMatchObject({ error: 'password must be atleast 3 characters long', });
+    });
+
+    test('assert that the username must be unique', async () => {
+      await api
+        .post('/api/users')
+        .send({
+          username: 'user1',
+          password: 'password',
+        })
+        .expect(409)
+        .expect({
+          error: 'username taken',
+        });
+    });
+
   });
-
-  test('assert that saving user without username fails', async () => {
-    const newUser = {
-      password: 'password',
-      authorative: true,
-    };
-
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400);
-  });
-
-  test('assert that saving user without password fails', async () => {
-    const newUser = {
-      username: 'user',
-      authorative: true,
-    };
-
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400);
-  });
-
-  test('assert that saving user without authorative defaults to false', async () => {
-    const newUser = {
-      username: 'user',
-      password: 'password',
-    };
-
-    const result = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(200);
-
-    expect(result.body.authorative).toBe(false);
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
 });
 
-describe('having initial users', async () => {
-
-  beforeEach(async () => {
-    await User.remove({});
-    const userPromises = initialUsers.map(u => new User(u).save());
-    await Promise.all(userPromises);
-  });
-
-  test('assert that getting all users is possible', async () => {
-    const usersBefore = await usersInDB();
-    const result = await api
-      .get('/api/users')
-      .expect(200)
-      .expect(/application\/json/);
-
-    expect(usersBefore.length).toEqual(result.body.length);
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
+afterAll(() => {
+  server.close();
 });

@@ -12,7 +12,7 @@ userSchema.statics.format = (user) => {
     id: user._id,
     username: user.username,
     name: user.name,
-    adult: user.authorative,
+    adult: user.adult,
   };
 };
 

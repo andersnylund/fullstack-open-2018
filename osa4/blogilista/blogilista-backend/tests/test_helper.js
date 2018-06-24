@@ -44,12 +44,12 @@ const initialUsers = [
   {
     username: 'user1',
     password: 'password1',
-    authorative: false,
+    adult: false,
   },
   {
-    username: 'user1',
+    username: 'user2',
     password: 'password2',
-    authorative: true,
+    adult: true,
   },
 ];
 

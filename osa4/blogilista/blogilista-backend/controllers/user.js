@@ -7,6 +7,10 @@ const userIsValid = (user) => {
     user.password !== null && user.password !== undefined;
 };
 
+const passwordIsValid = (password) => {
+  return password.length >= 3;
+};
+
 const saltRounds = 10;
 
 userRouter.get('/', async (req, res) => {
@@ -23,17 +27,26 @@ userRouter.post('/', async (req, res) => {
     return res.status(400).json({ error: 'username and password must be specified', });
   }
 
+  if (!passwordIsValid(req.body.password)) {
+    return res.status(400).json({ error: 'password must be atleast 3 characters long', });
+  }
+
+  const existingUser = await User.find({ username: req.body.username, });
+  if (existingUser.length > 0) {
+    return res.status(409).json({ error: 'username taken', });
+  }
+
   const hashed = await bcrypt.hash(req.body.password, saltRounds);
 
   const newUser = {
     username: req.body.username,
     name: req.body.name,
     password: hashed,
-    authorative: !req.body.authorative ? false : true,
+    adult: !req.body.adult ? true : req.body.adult,
   };
 
   try {
-    const savedUser = await new User(newUser).save();
+    const savedUser = await new User(newUser).save({ new: true, });
     return res.json(User.format(savedUser));
   } catch (exception) {
     return res.status(500).json({ error: 'unexpected error', });

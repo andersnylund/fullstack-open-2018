@@ -5,5 +5,5 @@ Content-Type: application/json
   "username": "username",
   "name": "Name",
   "password": "password",
-  "authorative": false
+  "adult": false
 }
