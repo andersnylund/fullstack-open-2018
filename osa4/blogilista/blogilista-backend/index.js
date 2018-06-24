@@ -6,6 +6,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const middleware = require('./utils/middleware');
 const blogRouter = require('./controllers/blog');
+const userRouter = require('./controllers/user');
 const config = require('./utils/config');
 
 mongoose.connect(config.mongoUrl);
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(middleware.logger);
 app.use('/api/blogs', blogRouter);
+app.use('/api/users', userRouter);
 app.use(middleware.error);
 
 const server = http.createServer(app);
@@ -23,8 +25,8 @@ server.listen(config.port, () => {
   console.log(`Server running on port ${config.port}`);
 });
 
-server.on('close', async () => {
-  await mongoose.connection.close();
+server.on('close', () => {
+  mongoose.connection.close();
 });
 
 process.on('unhandledRejection', (reason, p) => {

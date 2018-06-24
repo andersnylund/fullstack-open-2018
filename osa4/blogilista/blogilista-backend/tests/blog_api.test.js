@@ -4,11 +4,11 @@ const {
   app,
 } = require('../index');
 const api = supertest(app);
+const Blog = require('../models/blog');
 const {
   blogsInDB,
   initialBlogs,
 } = require('./test_helper');
-const Blog = require('../models/blog');
 
 describe('when having initial blogs', () => {
 
