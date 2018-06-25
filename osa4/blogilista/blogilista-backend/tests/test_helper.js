@@ -43,11 +43,13 @@ const initialBlogs = [
 const initialUsers = [
   {
     username: 'user1',
+    name: 'User Number1',
     password: 'password1',
     adult: false,
   },
   {
     username: 'user2',
+    name: 'User Number2',
     password: 'password2',
     adult: true,
   },

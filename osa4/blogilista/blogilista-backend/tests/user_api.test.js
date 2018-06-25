@@ -85,8 +85,11 @@ describe('testing user api', () => {
 
     beforeEach(async () => {
       await User.remove({});
-      const userPromises = initialUsers.map(u => new User(u).save());
-      await Promise.all(userPromises);
+      for (let user of initialUsers) {
+        await api
+          .post('/api/users')
+          .send(user);
+      }
     });
 
     test('assert that getting all users is possible', async () => {
@@ -96,6 +99,7 @@ describe('testing user api', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
+      expect(usersBefore.length).toEqual(2);
       expect(usersBefore.length).toEqual(result.body.length);
     });
 
@@ -108,7 +112,9 @@ describe('testing user api', () => {
         })
         .expect(400);
 
-      expect(result.body).toMatchObject({ error: 'password must be atleast 3 characters long', });
+      expect(result.body).toMatchObject({
+        error: 'password must be atleast 3 characters long',
+      });
     });
 
     test('assert that the username must be unique', async () => {
@@ -117,6 +123,7 @@ describe('testing user api', () => {
         .send({
           username: 'user1',
           password: 'password',
+          adult: true,
         })
         .expect(409)
         .expect({

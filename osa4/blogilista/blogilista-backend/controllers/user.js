@@ -2,16 +2,20 @@ const userRouter = require('express').Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
+
 const userIsValid = (user) => {
   return user.username !== null && user.username !== undefined &&
     user.password !== null && user.password !== undefined;
 };
 
+
 const passwordIsValid = (password) => {
   return password.length >= 3;
 };
 
+
 const saltRounds = 10;
+
 
 userRouter.get('/', async (req, res) => {
   try {
@@ -28,6 +32,7 @@ userRouter.get('/', async (req, res) => {
     });
   }
 });
+
 
 userRouter.post('/', async (req, res) => {
   if (!userIsValid(req.body)) {
@@ -56,7 +61,7 @@ userRouter.post('/', async (req, res) => {
   const newUser = {
     username: req.body.username,
     name: req.body.name,
-    password: hashed,
+    passwordHash: hashed,
     adult: !req.body.adult ? true : req.body.adult,
   };
 
@@ -74,5 +79,6 @@ userRouter.post('/', async (req, res) => {
     });
   }
 });
+
 
 module.exports = userRouter;
