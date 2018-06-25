@@ -21,24 +21,13 @@ blogRouter.get('/', async (req, res) => {
   return res.json(blogs.map(Blog.format));
 });
 
-
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.startsWith('bearer')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
-
 blogRouter.post('/', async (req, res) => {
   const newBlog = req.body;
   try {
 
-    const token = getTokenFrom(req);
-    const decodedToken = jwt.verify(token, process.env.SECRET);
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
 
-    if (!token || !decodedToken.id) {
+    if (!decodedToken.id) {
       return res.status(401).json({
         error: 'token missing or invalid',
       });
@@ -54,6 +43,9 @@ blogRouter.post('/', async (req, res) => {
     }
 
     const user = await User.findById(decodedToken.id);
+    if (!user) {
+      res.status(400).json({ error: 'user does not exist', });
+    }
     newBlog.user = user._id;
     const result = await new Blog(newBlog).save();
     user.blogs = user.blogs.concat(result._id);
