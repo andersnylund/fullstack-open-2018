@@ -44,7 +44,9 @@ blogRouter.post('/', async (req, res) => {
 
     const user = await User.findById(decodedToken.id);
     if (!user) {
-      res.status(400).json({ error: 'user does not exist', });
+      res.status(400).json({
+        error: 'user does not exist',
+      });
     }
     newBlog.user = user._id;
     const result = await new Blog(newBlog).save();
@@ -70,11 +72,24 @@ blogRouter.post('/', async (req, res) => {
 
 blogRouter.delete('/:id', async (req, res) => {
   try {
-    await Blog.findByIdAndRemove(req.params.id);
-    return res.status(204).end();
+    const userId = jwt.verify(req.token, process.env.SECRET).id;
+    const blog = await Blog.findById(req.params.id);
+
+    if (userId === blog.user.toString()) {
+      await Blog.findByIdAndRemove(req.params.id);
+      return res.status(204).end();
+    } else {
+      return res.status(403).send({ error: 'you do not own this blog', });
+    }
+
   } catch (exception) {
     if (process.env.NODE_ENV !== 'test') {
       console.log(exception);
+    }
+    if (exception.name === 'JsonWebTokenError') {
+      return res.status(401).send({
+        error: exception.message,
+      });
     }
     return res.status(400).json({
       error: 'malformed id',
