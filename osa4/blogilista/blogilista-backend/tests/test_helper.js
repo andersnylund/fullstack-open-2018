@@ -1,6 +1,7 @@
 const Blog = require('../models/blog');
 const User = require('../models/user');
 
+
 const initialBlogs = [
   {
     title: 'React patterns',
@@ -55,19 +56,47 @@ const initialUsers = [
   },
 ];
 
+
 const blogsInDB = async () => {
   const blogs = await Blog.find({});
   return blogs.map(Blog.format);
 };
+
 
 const usersInDB = async () => {
   const users = await User.find({});
   return users.map(User.format);
 };
 
+/**
+ * @returns a valid jwt-token
+ * @param {*} api the api use when creating the user
+ */
+const loginUsing = async (api) => {
+  await User.remove({});
+
+  await api
+    .post('/api/users')
+    .send({
+      username: 'anders',
+      name: 'Anders Nylund',
+      password: 'secret',
+      adult: true,
+    });
+
+  return (await api
+    .post('/api/login')
+    .send({
+      username: 'anders',
+      password: 'secret',
+    })).body.token;
+};
+
+
 module.exports = {
   initialBlogs,
   initialUsers,
   blogsInDB,
   usersInDB,
+  loginUsing,
 };

@@ -1,6 +1,7 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const jwt = require('jsonwebtoken');
 
 
 const blogIsValid = (blog) => {
@@ -12,33 +13,66 @@ const blogIsValid = (blog) => {
 blogRouter.get('/', async (req, res) => {
   const blogs = await Blog
     .find({})
-    .populate('user', { username: 1, name: 1, adult: 1, });
+    .populate('user', {
+      username: 1,
+      name: 1,
+      adult: 1,
+    });
   return res.json(blogs.map(Blog.format));
 });
 
 
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.startsWith('bearer')) {
+    return authorization.substring(7);
+  }
+  return null;
+};
+
+
 blogRouter.post('/', async (req, res) => {
   const newBlog = req.body;
-  if (newBlog.likes === undefined || newBlog.likes === null) {
-    newBlog.likes = 0;
-  }
-  if (!blogIsValid(newBlog)) {
-    return res.status(400).json({
-      error: 'title or url not specified',
-    });
-  }
-  const users = await User.find({});
-  if (users.length > 0) {
-    const user = users[0];
+  try {
+
+    const token = getTokenFrom(req);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
+    if (!token || !decodedToken.id) {
+      return res.status(401).json({
+        error: 'token missing or invalid',
+      });
+    }
+
+    if (newBlog.likes === undefined || newBlog.likes === null) {
+      newBlog.likes = 0;
+    }
+    if (!blogIsValid(newBlog)) {
+      return res.status(400).json({
+        error: 'title or url not specified',
+      });
+    }
+
+    const user = await User.findById(decodedToken.id);
     newBlog.user = user._id;
     const result = await new Blog(newBlog).save();
     user.blogs = user.blogs.concat(result._id);
     await user.save();
-    return res.status(201).json(Blog.format(result));
-  } else {
-    return res.status(400).json({ error: 'no users saved', });
-  }
 
+    return res.status(201).json(Blog.format(result));
+
+  } catch (exception) {
+    if (exception.name === 'JsonWebTokenError') {
+      res.status(401).json({
+        error: exception.message,
+      });
+    } else {
+      console.log(exception);
+      res.status(500).json({
+        error: 'Interal server error',
+      });
+    }
+  }
 });
 
 
@@ -78,7 +112,9 @@ blogRouter.put('/:id', async (req, res) => {
     if (result) {
       return res.json(result);
     } else {
-      return res.status(404).json({ error: 'not found', });
+      return res.status(404).json({
+        error: 'not found',
+      });
     }
   } catch (exception) {
     if (process.env.NODE_ENV !== 'test') {

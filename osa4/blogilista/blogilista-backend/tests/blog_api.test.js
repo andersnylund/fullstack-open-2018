@@ -8,6 +8,7 @@ const Blog = require('../models/blog');
 const {
   blogsInDB,
   initialBlogs,
+  loginUsing,
 } = require('./test_helper');
 
 describe('when having initial blogs', () => {
@@ -47,9 +48,10 @@ describe('when having initial blogs', () => {
     });
   });
 
-  test('test if adding a blog is possible', async () => {
-    const blogsBefore = await blogsInDB();
+  test('assert that adding a blog is possible', async () => {
+    const token = await loginUsing(api);
 
+    const blogsBefore = await blogsInDB();
     const newBlog = {
       title: 'My blog',
       author: 'Anders Nylund',
@@ -59,6 +61,7 @@ describe('when having initial blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(201);
 
@@ -68,7 +71,8 @@ describe('when having initial blogs', () => {
     expect(blogsAfter.length).toBe(blogsBefore.length + 1);
   });
 
-  test('test if giving no value for likes of new blog defaults to 0', async () => {
+  test('assert that giving no value for likes of new blog defaults to 0', async () => {
+    const token = await loginUsing(api);
     const newBlog = {
       title: 'No likes',
       author: 'Anders Nylund',
@@ -77,6 +81,7 @@ describe('when having initial blogs', () => {
 
     const result = await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(201);
 
@@ -85,6 +90,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that posting with no title returns 400', async () => {
+    const token = await loginUsing(api);
     const newBlog = {
       author: 'Anders Nylund',
       url: 'http://localhost:3000',
@@ -92,6 +98,7 @@ describe('when having initial blogs', () => {
 
     const result = await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(400);
 
@@ -100,6 +107,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that posting with no url returns 400', async () => {
+    const token = await loginUsing(api);
     const newBlog = {
       author: 'Anders Nylund',
       title: 'no url',
@@ -107,6 +115,7 @@ describe('when having initial blogs', () => {
 
     const result = await api
       .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
       .send(newBlog)
       .expect(400);
 
