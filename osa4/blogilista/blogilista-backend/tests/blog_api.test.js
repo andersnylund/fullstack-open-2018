@@ -123,10 +123,23 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that deleting a blog is possible', async () => {
+    const token = await loginUsing(api);
+
+    const blog = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        author: 'Anders',
+        url: '',
+        title: '',
+      })
+      .expect(201);
+
     const blogsBefore = await blogsInDB();
 
     await api
-      .delete(`/api/blogs/${blogsBefore[0].id}`)
+      .delete(`/api/blogs/${blog.body.id}`)
+      .set('Authorization', `bearer ${token}`)
       .expect(204);
 
     const blogsAfter = await blogsInDB();
@@ -135,8 +148,25 @@ describe('when having initial blogs', () => {
     expect(blogsAfter.length).toBe(blogsBefore.length - 1);
   });
 
+  test('assert that deleting someone else blog is not possible', async () => {
+    const token = await loginUsing(api);
+    const blogsBefore = await blogsInDB();
+
+    await api
+      .delete(`/api/blogs/${blogsBefore[0].id}`)
+      .set('Authorization', `bearer ${token}`)
+      .expect(403);
+
+    const blogsAfter = await blogsInDB();
+
+    expect(blogsAfter.length).toBe(blogsBefore.length);
+  });
+
   test('assert that deleting with malformed id returns 400', async () => {
+    const token = await loginUsing(api);
+
     await api.delete('/api/blogs/1')
+      .set('Authorization', `bearer ${token}`)
       .expect(400);
   });
 

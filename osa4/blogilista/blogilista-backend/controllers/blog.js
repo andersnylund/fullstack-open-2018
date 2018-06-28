@@ -57,12 +57,12 @@ blogRouter.post('/', async (req, res) => {
 
   } catch (exception) {
     if (exception.name === 'JsonWebTokenError') {
-      res.status(401).json({
+      return res.status(401).json({
         error: exception.message,
       });
     } else {
       console.log(exception);
-      res.status(500).json({
+      return res.status(500).json({
         error: 'Interal server error',
       });
     }
@@ -73,9 +73,10 @@ blogRouter.post('/', async (req, res) => {
 blogRouter.delete('/:id', async (req, res) => {
   try {
     const userId = jwt.verify(req.token, process.env.SECRET).id;
+
     const blog = await Blog.findById(req.params.id);
 
-    if (userId === blog.user.toString()) {
+    if (blog.user && userId === blog.user.toString()) {
       await Blog.findByIdAndRemove(req.params.id);
       return res.status(204).end();
     } else {
@@ -84,7 +85,7 @@ blogRouter.delete('/:id', async (req, res) => {
 
   } catch (exception) {
     if (process.env.NODE_ENV !== 'test') {
-      console.log(exception);
+      console.error({ exception, });
     }
     if (exception.name === 'JsonWebTokenError') {
       return res.status(401).send({
