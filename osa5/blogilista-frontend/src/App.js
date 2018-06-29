@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
+import BlogForm from './components/BlogForm';
 
 class App extends React.Component {
 	constructor(props) {
@@ -58,7 +59,7 @@ class App extends React.Component {
   	}
 	};
 	
-	handleLogOut = (event) => {
+	handleLogOut = () => {
 		window.localStorage.removeItem('blogiListaUser');
 		this.setState({ 
 			user: null, 
@@ -69,7 +70,16 @@ class App extends React.Component {
 
   handleChange = event => {
   	this.setState({ [event.target.name]: event.target.value, });
-  };
+	};
+	
+	handleNewBlog = async (event, title, author, url) => {
+		event.preventDefault();
+		const newBlog = { title, author, url };
+		const result = await blogService.post(newBlog, this.state.user.token);
+		this.setState({
+			blogs: this.state.blogs.concat(result)
+		});
+	}
 
   render() {
   	if (this.state.user === null) {
@@ -95,6 +105,7 @@ class App extends React.Component {
   					{this.state.blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
   				</tbody>
   			</table>
+				<BlogForm onNewBlog={this.handleNewBlog}></BlogForm>
   			<Notification message={this.state.message}></Notification>
   		</div>
   	);
