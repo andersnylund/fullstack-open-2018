@@ -22,13 +22,14 @@ class App extends React.Component {
 		};
 	}
 
-	setBlogs = () => {
-		blogService.getAll()
-		.then(blogs => this.setState({ blogs, }))
-		.catch((error) => {
-			console.error(error);
+	setBlogs = async () => {
+		try {
+			const blogs = await blogService.getAll();
+			this.setState({ blogs });
+		} catch (exception) {
+			console.error({ exception });
 			this.notify('Network error', true);
-		});
+		}
 	}
 
 	
@@ -99,7 +100,7 @@ class App extends React.Component {
 		try {
 			result = await blogService.post(newBlog, this.state.user.token);
 		} catch (exception) {
-			this.notify(exception, true);
+			this.notify('Network error', true);
 			return;
 		}
 		this.setState({
