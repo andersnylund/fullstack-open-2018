@@ -15,25 +15,30 @@ class App extends React.Component {
 			password: '',
 			user: null,
 			message: null,
+			title: '',
+			author: '',
+			url: '',
 		};
 	}
 
-	componentDidMount() {
+	setBlogs = () => {
+		blogService.getAll()
+		.then(blogs => this.setState({ blogs, }))
+		.catch((error) => {
+			console.error(error);
+			this.setState({ message: 'Network error', });
+			setTimeout(() => {
+				this.setState({ message: null, });
+			}, 5000);
+		});
+	}
 
+	componentDidMount() {
 		const blogiListaUser = window.localStorage.getItem('blogiListaUser');
 		if (blogiListaUser) {
 			this.setState({ user: JSON.parse(blogiListaUser), });
+			this.setBlogs();
 		}
-
-		blogService.getAll()
-			.then(blogs => this.setState({ blogs, }))
-			.catch((error) => {
-				console.error(error);
-				this.setState({ message: 'Network error', });
-				setTimeout(() => {
-					this.setState({ message: null, });
-				}, 5000);
-			});
 	}
 
   handleLogin = async (event) => {
@@ -49,7 +54,8 @@ class App extends React.Component {
 				username: '',
 				password: '',
   		});
-  		window.localStorage.setItem('blogiListaUser', JSON.stringify(result));
+			window.localStorage.setItem('blogiListaUser', JSON.stringify(result));
+			this.setBlogs();
   	} catch (e) {
   		console.error(e);
   		this.setState({ message: 'Login failed', });
@@ -59,27 +65,48 @@ class App extends React.Component {
   	}
 	};
 	
+
 	handleLogOut = () => {
 		window.localStorage.removeItem('blogiListaUser');
 		this.setState({ 
 			user: null, 
 			username: '',
 			password: '',
+			blogs: [],
 		});
 	};
+
 
   handleChange = event => {
   	this.setState({ [event.target.name]: event.target.value, });
 	};
 	
+
 	handleNewBlog = async (event, title, author, url) => {
 		event.preventDefault();
 		const newBlog = { title, author, url };
-		const result = await blogService.post(newBlog, this.state.user.token);
+		let result;
+		try {
+			result = await blogService.post(newBlog, this.state.user.token);
+		} catch (exception) {
+			this.setState({
+				error: exception,
+			});
+			setTimeout(() => {
+				this.setState({
+					error: null,
+				});
+			}, 5000)
+			return;
+		}
 		this.setState({
-			blogs: this.state.blogs.concat(result)
+			blogs: this.state.blogs.concat(result),
+			title: '',
+			author: '',
+			url: '',
 		});
 	}
+
 
   render() {
   	if (this.state.user === null) {
@@ -88,13 +115,14 @@ class App extends React.Component {
   				<LoginForm
   					username={this.state.username}
   					password={this.state.password}
-  					handleLogin={this.handleLogin}
-  					handleChange={this.handleChange}
+  					onLogin={this.handleLogin}
+  					onChange={this.handleChange}
   				/>
   				<Notification message={this.state.message}></Notification>
   			</div>
   		);
-  	}
+		}
+		
   	return (
   		<div>
   			<h2>Blogs</h2>
@@ -105,7 +133,13 @@ class App extends React.Component {
   					{this.state.blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
   				</tbody>
   			</table>
-				<BlogForm onNewBlog={this.handleNewBlog}></BlogForm>
+				<BlogForm 
+					onNewBlog={this.handleNewBlog} 
+					onChange={this.handleChange}
+					title={this.state.title}
+					author={this.state.author}
+					url={this.state.url}>
+				</BlogForm>
   			<Notification message={this.state.message}></Notification>
   		</div>
   	);
