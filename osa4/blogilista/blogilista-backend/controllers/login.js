@@ -17,7 +17,7 @@ loginRouter.post('/', async (req, res) => {
 
   if (!(user && passwordCorrect)) {
     return res.status(401).send({
-      error: 'invalid credentials',
+      error: 'Invalid credentials',
     });
   }
 

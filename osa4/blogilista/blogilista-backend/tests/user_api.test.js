@@ -113,7 +113,7 @@ describe('testing user api', () => {
         .expect(400);
 
       expect(result.body).toMatchObject({
-        error: 'password must be atleast 3 characters long',
+        error: 'Password must be atleast 3 characters long',
       });
     });
 
@@ -127,7 +127,7 @@ describe('testing user api', () => {
         })
         .expect(409)
         .expect({
-          error: 'username taken',
+          error: 'Username taken',
         });
     });
 

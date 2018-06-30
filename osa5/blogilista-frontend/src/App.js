@@ -14,7 +14,8 @@ class App extends React.Component {
 			username: '',
 			password: '',
 			user: null,
-			message: null,
+			notification: null,
+			isError: false,
 			title: '',
 			author: '',
 			url: '',
@@ -26,12 +27,23 @@ class App extends React.Component {
 		.then(blogs => this.setState({ blogs, }))
 		.catch((error) => {
 			console.error(error);
-			this.setState({ message: 'Network error', });
-			setTimeout(() => {
-				this.setState({ message: null, });
-			}, 5000);
+			this.notify('Network error', true);
 		});
 	}
+
+	
+	notify = (notification, isError) => {
+		this.setState({
+			notification,
+			isError,
+		});
+		setTimeout(() => {
+			this.setState({
+				notification: null
+			})
+		}, 3000)
+	}
+
 
 	componentDidMount() {
 		const blogiListaUser = window.localStorage.getItem('blogiListaUser');
@@ -56,12 +68,9 @@ class App extends React.Component {
   		});
 			window.localStorage.setItem('blogiListaUser', JSON.stringify(result));
 			this.setBlogs();
-  	} catch (e) {
-  		console.error(e);
-  		this.setState({ message: 'Login failed', });
-  		setTimeout(() => {
-  			this.setState({ message: null, });
-  		}, 5000);
+  	} catch (exception) {
+  		console.error({exception});
+			this.notify(exception.response.data.error, true);
   	}
 	};
 	
@@ -74,6 +83,7 @@ class App extends React.Component {
 			password: '',
 			blogs: [],
 		});
+		this.notify('Logged out', false);
 	};
 
 
@@ -89,14 +99,7 @@ class App extends React.Component {
 		try {
 			result = await blogService.post(newBlog, this.state.user.token);
 		} catch (exception) {
-			this.setState({
-				error: exception,
-			});
-			setTimeout(() => {
-				this.setState({
-					error: null,
-				});
-			}, 5000)
+			this.notify(exception, true);
 			return;
 		}
 		this.setState({
@@ -105,6 +108,7 @@ class App extends React.Component {
 			author: '',
 			url: '',
 		});
+		this.notify(`Added new blog '${result.title}'`, false);
 	}
 
 
@@ -118,7 +122,7 @@ class App extends React.Component {
   					onLogin={this.handleLogin}
   					onChange={this.handleChange}
   				/>
-  				<Notification message={this.state.message}></Notification>
+  				<Notification message={this.state.notification} isError={this.state.isError}></Notification>
   			</div>
   		);
 		}
@@ -140,7 +144,7 @@ class App extends React.Component {
 					author={this.state.author}
 					url={this.state.url}>
 				</BlogForm>
-  			<Notification message={this.state.message}></Notification>
+  			<Notification message={this.state.notification} isError={this.state.isError}></Notification>
   		</div>
   	);
   }

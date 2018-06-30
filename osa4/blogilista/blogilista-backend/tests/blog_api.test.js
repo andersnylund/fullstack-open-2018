@@ -102,7 +102,7 @@ describe('when having initial blogs', () => {
       .send(newBlog)
       .expect(400);
 
-    expect(result.body.error).toEqual('title or url not specified');
+    expect(result.body.error).toEqual('Title or url not specified');
 
   });
 
@@ -119,7 +119,7 @@ describe('when having initial blogs', () => {
       .send(newBlog)
       .expect(400);
 
-    expect(result.body.error).toEqual('title or url not specified');
+    expect(result.body.error).toEqual('Title or url not specified');
   });
 
   test('assert that deleting a blog is possible', async () => {

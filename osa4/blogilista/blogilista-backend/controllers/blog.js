@@ -29,7 +29,7 @@ blogRouter.post('/', async (req, res) => {
 
     if (!decodedToken.id) {
       return res.status(401).json({
-        error: 'token missing or invalid',
+        error: 'Token missing or invalid',
       });
     }
 
@@ -38,14 +38,14 @@ blogRouter.post('/', async (req, res) => {
     }
     if (!blogIsValid(newBlog)) {
       return res.status(400).json({
-        error: 'title or url not specified',
+        error: 'Title or url not specified',
       });
     }
 
     const user = await User.findById(decodedToken.id);
     if (!user) {
       res.status(400).json({
-        error: 'user does not exist',
+        error: 'User does not exist',
       });
     }
     newBlog.user = user._id;
@@ -80,7 +80,7 @@ blogRouter.delete('/:id', async (req, res) => {
       await Blog.findByIdAndRemove(req.params.id);
       return res.status(204).end();
     } else {
-      return res.status(403).send({ error: 'you do not own this blog', });
+      return res.status(403).send({ error: 'You do not own this blog', });
     }
 
   } catch (exception) {
@@ -93,7 +93,7 @@ blogRouter.delete('/:id', async (req, res) => {
       });
     }
     return res.status(400).json({
-      error: 'malformed id',
+      error: 'Malformed id',
     });
   }
 });
@@ -105,7 +105,7 @@ blogRouter.put('/:id', async (req, res) => {
 
   if (!blogIsValid(newBlog)) {
     return res.status(400).json({
-      error: 'title or url not specified',
+      error: 'Title or url not specified',
     });
   }
 
@@ -121,7 +121,7 @@ blogRouter.put('/:id', async (req, res) => {
       return res.json(result);
     } else {
       return res.status(404).json({
-        error: 'not found',
+        error: 'Not found',
       });
     }
   } catch (exception) {
@@ -129,7 +129,7 @@ blogRouter.put('/:id', async (req, res) => {
       console.log(exception);
     }
     return res.status(400).json({
-      error: 'malformed id',
+      error: 'Malformed id',
     });
   }
 });

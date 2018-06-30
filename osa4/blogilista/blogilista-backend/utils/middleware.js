@@ -14,7 +14,7 @@ const logger = (req, res, next) => {
 
 const error = (req, res) => {
   res.status(404).send({
-    error: 'unknown endpoint',
+    error: 'Unknown endpoint',
   });
 };
 

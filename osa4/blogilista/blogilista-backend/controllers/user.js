@@ -28,7 +28,7 @@ userRouter.get('/', async (req, res) => {
       console.log(exception);
     }
     return res.status(500).json({
-      error: 'unexpected error',
+      error: 'Unexpected error',
     });
   }
 });
@@ -37,13 +37,13 @@ userRouter.get('/', async (req, res) => {
 userRouter.post('/', async (req, res) => {
   if (!userIsValid(req.body)) {
     return res.status(400).json({
-      error: 'username and password must be specified',
+      error: 'Username and password must be specified',
     });
   }
 
   if (!passwordIsValid(req.body.password)) {
     return res.status(400).json({
-      error: 'password must be atleast 3 characters long',
+      error: 'Password must be atleast 3 characters long',
     });
   }
 
@@ -52,7 +52,7 @@ userRouter.post('/', async (req, res) => {
   });
   if (existingUser.length > 0) {
     return res.status(409).json({
-      error: 'username taken',
+      error: 'Username taken',
     });
   }
 
@@ -75,7 +75,7 @@ userRouter.post('/', async (req, res) => {
       console.log(exception);
     }
     return res.status(500).json({
-      error: 'unexpected error',
+      error: 'Unexpected error',
     });
   }
 });
