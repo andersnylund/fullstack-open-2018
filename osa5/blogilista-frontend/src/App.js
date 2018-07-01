@@ -1,10 +1,11 @@
 import React from 'react';
-import Blog from './components/Blog';
+import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
 import BlogForm from './components/BlogForm';
+import Togglable from './components/Togglable';
 
 class App extends React.Component {
 	constructor(props) {
@@ -13,6 +14,7 @@ class App extends React.Component {
 			blogs: [],
 			username: '',
 			password: '',
+			loginVisible: false,
 			user: null,
 			notification: null,
 			isError: false,
@@ -21,6 +23,16 @@ class App extends React.Component {
 			url: '',
 		};
 	}
+
+	
+	componentDidMount() {
+		const blogiListaUser = window.localStorage.getItem('blogiListaUser');
+		if (blogiListaUser) {
+			this.setState({ user: JSON.parse(blogiListaUser), });
+		}
+		this.setBlogs();
+	}
+
 
 	setBlogs = async () => {
 		try {
@@ -45,14 +57,6 @@ class App extends React.Component {
 		}, 3000)
 	}
 
-
-	componentDidMount() {
-		const blogiListaUser = window.localStorage.getItem('blogiListaUser');
-		if (blogiListaUser) {
-			this.setState({ user: JSON.parse(blogiListaUser), });
-			this.setBlogs();
-		}
-	}
 
   handleLogin = async (event) => {
   	event.preventDefault();
@@ -82,19 +86,19 @@ class App extends React.Component {
 			user: null, 
 			username: '',
 			password: '',
-			blogs: [],
 		});
 		this.notify('Logged out', false);
 	};
 
 
-  handleChange = event => {
+  handleChange = (event) => {
   	this.setState({ [event.target.name]: event.target.value, });
 	};
 	
 
 	handleNewBlog = async (event, title, author, url) => {
 		event.preventDefault();
+		this.blogForm.toggleVisibility();
 		const newBlog = { title, author, url };
 		let result;
 		try {
@@ -113,38 +117,49 @@ class App extends React.Component {
 	}
 
 
-  render() {
-  	if (this.state.user === null) {
-  		return (
-  			<div>
-  				<LoginForm
-  					username={this.state.username}
-  					password={this.state.password}
-  					onLogin={this.handleLogin}
-  					onChange={this.handleChange}
-  				/>
-  				<Notification message={this.state.notification} isError={this.state.isError}></Notification>
-  			</div>
-  		);
-		}
+  render() {	
 		
+		const loginForm = () => {
+			return (
+				<div>
+					<Togglable buttonLabel='Login'>
+						<LoginForm
+							username={this.state.username}
+							password={this.state.password}
+							onLogin={this.handleLogin}
+							onChange={this.handleChange}
+						/>
+					</Togglable>
+				</div>
+			);
+		}
+	
+		const blogForm = () => {
+			return (
+				<Togglable buttonLabel='Add blog' ref={component => this.blogForm = component}>
+					<BlogForm
+						onNewBlog={this.handleNewBlog} 
+						onChange={this.handleChange}
+						title={this.state.title}
+						author={this.state.author}
+						url={this.state.url}>
+					</BlogForm>
+				</Togglable>
+			);
+		};
+
   	return (
   		<div>
   			<h2>Blogs</h2>
-  			<p>{this.state.user.name} logged in</p>
-				<button onClick={this.handleLogOut}>Log out</button>
-				<table>
-  				<tbody>
-  					{this.state.blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
-  				</tbody>
-  			</table>
-				<BlogForm 
-					onNewBlog={this.handleNewBlog} 
-					onChange={this.handleChange}
-					title={this.state.title}
-					author={this.state.author}
-					url={this.state.url}>
-				</BlogForm>
+				{this.state.user === null ?
+          loginForm() :
+          <div>
+            <div><strong>{this.state.user.name}</strong> logged in</div>
+						<button onClick={this.handleLogOut}>Logout</button>
+            {blogForm()}
+          </div>
+        }
+				<BlogList blogs={this.state.blogs}></BlogList>
   			<Notification message={this.state.notification} isError={this.state.isError}></Notification>
   		</div>
   	);
