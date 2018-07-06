@@ -8,14 +8,10 @@ class Blog extends React.Component {
 		};
 	}
 
-	handleClick = () => {
+	handleExpand = () => {
 		this.setState({
 			isExpanded: !this.state.isExpanded
 		});
-	}
-
-	handleLike = (event) => {
-		event.preventDefault();
 	}
 
 	render() {
@@ -29,7 +25,7 @@ class Blog extends React.Component {
 
 		const compact = () => {
 			return (
-				<div onClick={this.handleClick}>
+				<div onClick={this.handleExpand}>
 					{`${this.props.blog.title} by ${this.props.blog.author}`}
 				</div>				
 			);
@@ -38,7 +34,7 @@ class Blog extends React.Component {
 		const expanded = () => {
 			return (
 				<div>
-					<div onClick={this.handleClick}>
+					<div onClick={this.handleExpand}>
 						{`${this.props.blog.title} by ${this.props.blog.author}`}
 					</div>
 					<div>
@@ -46,7 +42,7 @@ class Blog extends React.Component {
 					</div>
 					<div>
 						{`${this.props.blog.likes} likes`}
-						<button onClick={this.handleLike}>Like</button>
+						<button onClick={() => this.props.onLike(this.props.blog)}>Like</button>
 					</div>
 					<div>
 						{`added by ${this.props.blog.user ? this.props.blog.user.name : 'unknown'}`}

@@ -1,8 +1,8 @@
 import React from 'react';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
-import blogService from './services/blogs';
-import loginService from './services/login';
+import blogService from './services/blog_service';
+import loginService from './services/login_service';
 import Notification from './components/Notification';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
@@ -116,6 +116,24 @@ class App extends React.Component {
 		this.notify(`Added new blog '${result.title}'`, false);
 	}
 
+	handleLike = async (blogToUpdate) => {
+		try {
+			const updatedBlog = { ...blogToUpdate };
+			updatedBlog.likes = blogToUpdate.likes + 1;
+			await blogService.put(updatedBlog);
+			let newBlogList = [ ...this.state.blogs ];
+			newBlogList = newBlogList.filter(b => b.id !== blogToUpdate.id);
+			newBlogList = newBlogList.concat(updatedBlog);
+			this.setState({
+				blogs: newBlogList
+			});
+			this.notify(`Liked blog '${blogToUpdate.title}'`);
+		} catch (exception) {
+			console.error({exception});
+			this.notify(exception.response.data.error, true);
+		}
+	};
+
 
   render() {	
 		
@@ -159,7 +177,7 @@ class App extends React.Component {
             {blogForm()}
           </div>
         }
-				<BlogList blogs={this.state.blogs}></BlogList>
+				<BlogList blogs={this.state.blogs} onLike={this.handleLike}></BlogList>
   			<Notification message={this.state.notification} isError={this.state.isError}></Notification>
   		</div>
   	);

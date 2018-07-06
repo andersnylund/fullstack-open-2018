@@ -21,7 +21,21 @@ const post = async (blog, token) => {
 	return result.data;
 };
 
+const put = async (blog) => {
+	const request = {
+		method: 'PUT',
+		data: blog,
+		url: `${baseUrl}/${blog.id}`,
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	};
+	const result = await axios(request);
+	return result.data;
+};
+
 export default {
 	getAll,
 	post,
+	put,
 };
