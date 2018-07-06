@@ -53,30 +53,30 @@ class App extends React.Component {
 		setTimeout(() => {
 			this.setState({
 				notification: null
-			})
-		}, 3000)
+			});
+		}, 3000);
 	}
 
 
-  handleLogin = async (event) => {
-  	event.preventDefault();
+	handleLogin = async (event) => {
+		event.preventDefault();
 
-  	try {
-  		const result = await loginService.login({
-  			username: this.state.username,
-  			password: this.state.password,
-  		});
-  		this.setState({
+		try {
+			const result = await loginService.login({
+				username: this.state.username,
+				password: this.state.password,
+			});
+			this.setState({
 				user: result,
 				username: '',
 				password: '',
-  		});
+			});
 			window.localStorage.setItem('blogiListaUser', JSON.stringify(result));
 			this.setBlogs();
-  	} catch (exception) {
-  		console.error({exception});
+		} catch (exception) {
+			console.error({exception});
 			this.notify(exception.response.data.error, true);
-  	}
+		}
 	};
 	
 
@@ -91,8 +91,8 @@ class App extends React.Component {
 	};
 
 
-  handleChange = (event) => {
-  	this.setState({ [event.target.name]: event.target.value, });
+	handleChange = (event) => {
+		this.setState({ [event.target.name]: event.target.value, });
 	};
 	
 
@@ -135,7 +135,7 @@ class App extends React.Component {
 	};
 
 
-  render() {	
+	render() {	
 		
 		const loginForm = () => {
 			return (
@@ -150,7 +150,7 @@ class App extends React.Component {
 					</Togglable>
 				</div>
 			);
-		}
+		};
 	
 		const blogForm = () => {
 			return (
@@ -166,22 +166,22 @@ class App extends React.Component {
 			);
 		};
 
-  	return (
-  		<div>
-  			<h2>Blogs</h2>
+		return (
+			<div>
+				<h2>Blogs</h2>
 				{this.state.user === null ?
-          loginForm() :
-          <div>
-            <div><strong>{this.state.user.name}</strong> logged in</div>
+					loginForm() :
+					<div>
+						<div><strong>{this.state.user.name}</strong> logged in</div>
 						<button onClick={this.handleLogOut}>Logout</button>
-            {blogForm()}
-          </div>
-        }
+						{blogForm()}
+					</div>
+				}
 				<BlogList blogs={this.state.blogs} onLike={this.handleLike}></BlogList>
-  			<Notification message={this.state.notification} isError={this.state.isError}></Notification>
-  		</div>
-  	);
-  }
+				<Notification message={this.state.notification} isError={this.state.isError}></Notification>
+			</div>
+		);
+	}
 }
 
 export default App;

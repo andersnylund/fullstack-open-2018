@@ -29,7 +29,7 @@ class Blog extends React.Component {
 					{`${this.props.blog.title} by ${this.props.blog.author}`}
 				</div>				
 			);
-		} 
+		};
 
 		const expanded = () => {
 			return (
@@ -49,7 +49,7 @@ class Blog extends React.Component {
 					</div>
 				</div>	
 			);
-		}
+		};
 		
 		return (
 			<div style={blogStyle}>
