@@ -194,7 +194,7 @@ class App extends React.Component {
 						{blogForm()}
 					</div>
 				}
-				<BlogList blogs={this.state.blogs} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
+				<BlogList blogs={this.state.blogs} user={this.state.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
 				<Notification message={this.state.notification} isError={this.state.isError}></Notification>
 			</div>
 		);

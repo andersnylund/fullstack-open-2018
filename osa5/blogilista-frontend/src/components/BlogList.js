@@ -1,7 +1,7 @@
 import React from 'react';
 import Blog from './Blog';
 
-const BlogList = ({ blogs, onLike, onDelete }) => {
+const BlogList = ({ blogs, onLike, onDelete, user }) => {
 	
 	const sorted = blogs.sort((a, b) => {
 		return a.likes < b.likes;
@@ -9,7 +9,7 @@ const BlogList = ({ blogs, onLike, onDelete }) => {
 	
 	return (
 		<div>
-			{sorted.map(blog => <Blog key={blog.id} blog={blog} onLike={onLike} onDelete={onDelete}/>)}
+			{sorted.map(blog => <Blog key={blog.id} blog={blog} user={user} onLike={onLike} onDelete={onDelete}/>)}
 		</div>
 	);
 };

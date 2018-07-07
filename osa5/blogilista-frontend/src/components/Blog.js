@@ -23,6 +23,18 @@ class Blog extends React.Component {
 			marginBottom: 5
 		};
 
+		const likeButton = () => {
+			if(this.props.user && (!this.props.blog.user || this.props.blog.user.username === this.props.user.username)) {
+				return (
+					<div>
+						<button onClick={() => this.props.onDelete(this.props.blog)}>Delete</button>
+					</div>
+				);
+			} else {
+				return null;
+			}
+		};
+
 		const compact = () => {
 			return (
 				<div onClick={this.handleExpand}>
@@ -47,9 +59,7 @@ class Blog extends React.Component {
 					<div>
 						{`added by ${this.props.blog.user ? this.props.blog.user.name : 'unknown'}`}
 					</div>
-					<div>
-						<button onClick={() => this.props.onDelete(this.props.blog)}>Delete</button>
-					</div>
+					{likeButton()}
 				</div>	
 			);
 		};
