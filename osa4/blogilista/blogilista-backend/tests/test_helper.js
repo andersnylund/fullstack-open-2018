@@ -72,23 +72,32 @@ const usersInDB = async () => {
  * @returns a valid jwt-token
  * @param {*} api the api use when creating the user
  */
-const loginUsing = async (api) => {
+const loginAsUser1 = async (api) => {
   await User.remove({});
 
   await api
     .post('/api/users')
     .send({
-      username: 'anders',
-      name: 'Anders Nylund',
-      password: 'secret',
+      username: 'user1',
+      name: 'User 1',
+      password: 'password1',
+      adult: true,
+    });
+
+  await api
+    .post('/api/users')
+    .send({
+      username: 'user2',
+      name: 'User 2',
+      password: 'password2',
       adult: true,
     });
 
   return (await api
     .post('/api/login')
     .send({
-      username: 'anders',
-      password: 'secret',
+      username: 'user1',
+      password: 'password1',
     })).body.token;
 };
 
@@ -98,5 +107,5 @@ module.exports = {
   initialUsers,
   blogsInDB,
   usersInDB,
-  loginUsing,
+  loginAsUser1,
 };

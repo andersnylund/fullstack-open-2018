@@ -8,7 +8,7 @@ const Blog = require('../models/blog');
 const {
   blogsInDB,
   initialBlogs,
-  loginUsing,
+  loginAsUser1,
 } = require('./test_helper');
 
 describe('when having initial blogs', () => {
@@ -49,7 +49,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that adding a blog is possible', async () => {
-    const token = await loginUsing(api);
+    const token = await loginAsUser1(api);
 
     const blogsBefore = await blogsInDB();
     const newBlog = {
@@ -72,7 +72,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that giving no value for likes of new blog defaults to 0', async () => {
-    const token = await loginUsing(api);
+    const token = await loginAsUser1(api);
     const newBlog = {
       title: 'No likes',
       author: 'Anders Nylund',
@@ -90,7 +90,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that posting with no title returns 400', async () => {
-    const token = await loginUsing(api);
+    const token = await loginAsUser1(api);
     const newBlog = {
       author: 'Anders Nylund',
       url: 'http://localhost:3000',
@@ -107,7 +107,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that posting with no url returns 400', async () => {
-    const token = await loginUsing(api);
+    const token = await loginAsUser1(api);
     const newBlog = {
       author: 'Anders Nylund',
       title: 'no url',
@@ -123,7 +123,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that deleting a blog is possible', async () => {
-    const token = await loginUsing(api);
+    const token = await loginAsUser1(api);
 
     const blog = await api
       .post('/api/blogs')
@@ -148,8 +148,22 @@ describe('when having initial blogs', () => {
     expect(blogsAfter.length).toBe(blogsBefore.length - 1);
   });
 
-  test('assert that deleting someone else blog is not possible', async () => {
-    const token = await loginUsing(api);
+  test('assert that deleting a blog without information who added it is possible', async () => {
+    const token = await loginAsUser1(api);
+    const blogsBefore = await blogsInDB();
+
+    await api
+      .delete(`/api/blogs/${blogsBefore[0].id}`)
+      .set('Authorization', `bearer ${token}`)
+      .expect(403);
+
+    const blogsAfter = await blogsInDB();
+
+    expect(blogsAfter.length).toBe(blogsBefore.length);
+  });
+
+  test('assert that deleting someone elses blog is not possible', async () => {
+    const token = await loginAsUser1(api);
     const blogsBefore = await blogsInDB();
 
     await api
@@ -163,7 +177,7 @@ describe('when having initial blogs', () => {
   });
 
   test('assert that deleting with malformed id returns 400', async () => {
-    const token = await loginUsing(api);
+    const token = await loginAsUser1(api);
 
     await api.delete('/api/blogs/1')
       .set('Authorization', `bearer ${token}`)

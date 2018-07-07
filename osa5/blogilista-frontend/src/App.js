@@ -102,18 +102,19 @@ class App extends React.Component {
 		const newBlog = { title, author, url };
 		let result;
 		try {
-			result = await blogService.post(newBlog, this.state.user.token);
+			await blogService.post(newBlog, this.state.user.token);
+			result = await blogService.getAll();
 		} catch (exception) {
 			this.notify('Network error', true);
 			return;
 		}
 		this.setState({
-			blogs: this.state.blogs.concat(result),
+			blogs: result,
 			title: '',
 			author: '',
 			url: '',
 		});
-		this.notify(`Added new blog '${result.title}'`, false);
+		this.notify(`Added new blog '${title}'`, false);
 	}
 
 	handleLike = async (blogToUpdate) => {
@@ -122,21 +123,37 @@ class App extends React.Component {
 			updatedBlog.likes = blogToUpdate.likes + 1;
 			await blogService.put(updatedBlog);
 			let newBlogList = [ ...this.state.blogs ];
-			newBlogList = newBlogList.filter(b => b.id !== blogToUpdate.id);
-			newBlogList = newBlogList.concat(updatedBlog);
 			this.setState({
-				blogs: newBlogList
+				blogs: newBlogList.filter(b => b.id !== blogToUpdate.id).concat(updatedBlog)
 			});
 			this.notify(`Liked blog '${blogToUpdate.title}'`);
 		} catch (exception) {
-			console.error({exception});
+			console.error({ exception });
 			this.notify(exception.response.data.error, true);
 		}
 	};
 
+	handleDelete = async (blogToDelete) => {
+		if (window.confirm(`Delete '${blogToDelete.title}' by ${blogToDelete.author}?`)) {
+			if (!this.state.user) {
+				this.notify('Login and try again', true);
+				return;
+			}
+			try {
+				await blogService.remove(blogToDelete, this.state.user.token);
+				let newBlogList = [ ...this.state.blogs ];
+				this.setState({
+					blogs: newBlogList.filter(b => b.id !== blogToDelete.id)
+				});
+			} catch (exception) {
+				console.error({ exception });
+				this.notify(exception.response.data.error, true);
+			}
+		}
+	}
+
 
 	render() {	
-		
 		const loginForm = () => {
 			return (
 				<div>
@@ -177,7 +194,7 @@ class App extends React.Component {
 						{blogForm()}
 					</div>
 				}
-				<BlogList blogs={this.state.blogs} onLike={this.handleLike}></BlogList>
+				<BlogList blogs={this.state.blogs} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
 				<Notification message={this.state.notification} isError={this.state.isError}></Notification>
 			</div>
 		);

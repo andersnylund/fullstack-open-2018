@@ -47,6 +47,9 @@ class Blog extends React.Component {
 					<div>
 						{`added by ${this.props.blog.user ? this.props.blog.user.name : 'unknown'}`}
 					</div>
+					<div>
+						<button onClick={() => this.props.onDelete(this.props.blog)}>Delete</button>
+					</div>
 				</div>	
 			);
 		};

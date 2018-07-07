@@ -34,8 +34,21 @@ const put = async (blog) => {
 	return result.data;
 };
 
+const remove = async (blog, token) => {
+	const request = {
+		method: 'DELETE',
+		url: `${baseUrl}/${blog.id}`,
+		headers: {
+			'Authorization': `bearer ${token}`
+		}
+	};
+	const result = await axios(request);
+	return result.data;
+};
+
 export default {
 	getAll,
 	post,
 	put,
+	remove,
 };
