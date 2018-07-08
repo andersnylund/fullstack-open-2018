@@ -15,7 +15,7 @@ describe.only('<Blog />', () => {
 		const onDeleteMock = jest.fn();
 
 		const blogComponent = shallow(<Blog blog={blog} onLike={onLikeMock} onDelete={onDeleteMock}/>);
-		console.log(blogComponent.debug());
+		//console.log(blogComponent.debug());
 
 		let wrapper = blogComponent.find('.wrapper').text();
 		expect(wrapper).toContain(blog.title);

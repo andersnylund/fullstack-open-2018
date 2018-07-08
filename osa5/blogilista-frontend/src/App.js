@@ -156,7 +156,7 @@ class App extends React.Component {
 	render() {	
 		const loginForm = () => {
 			return (
-				<div>
+				<div className='loginForm'>
 					<Togglable buttonLabel='Login'>
 						<LoginForm
 							username={this.state.username}
@@ -192,9 +192,9 @@ class App extends React.Component {
 						<div><strong>{this.state.user.name}</strong> logged in</div>
 						<button onClick={this.handleLogOut}>Logout</button>
 						{blogForm()}
+						<BlogList blogs={this.state.blogs} user={this.state.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
 					</div>
 				}
-				<BlogList blogs={this.state.blogs} user={this.state.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
 				<Notification message={this.state.notification} isError={this.state.isError}></Notification>
 			</div>
 		);
