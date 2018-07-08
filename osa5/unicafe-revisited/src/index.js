@@ -3,8 +3,13 @@ import ReactDOM from 'react-dom'
 import { createStore } from 'redux'; 
 import counterReducer from './reducer';
 
-const Statistiikka = () => {
-  const palautteita = 0
+const store = createStore(counterReducer);
+
+const Statistiikka = ({ onZero }) => {
+
+  const state = store.getState();
+
+  const palautteita = state.good + state.ok + state.bad;
 
   if (palautteita === 0) {
     return (
@@ -22,47 +27,45 @@ const Statistiikka = () => {
         <tbody>
           <tr>
             <td>Hyvä</td>
-            <td></td>
+            <td>{state.good}</td>
           </tr>
           <tr>
             <td>Neutraali</td>
-            <td></td>
+            <td>{state.ok}</td>
           </tr>
           <tr>
             <td>Huono</td>
-            <td></td>
+            <td>{state.bad}</td>
           </tr>
           <tr>
             <td>Keskiarvo</td>
-            <td></td>
+            <td>{((state.good * 1) + (state.bad * -1)) / palautteita}</td>
           </tr>
           <tr>
-            <td>Positiivisia</td>
-            <td></td>
+            <td>Hyviä</td>
+            <td>{`${state.good / (palautteita)} %`}</td>
           </tr>
         </tbody>
       </table>
-
-      <button>nollaa tilasto</button>
+      <button onClick={onZero}>nollaa tilasto</button>
     </div >
   )
 }
 
-const store = createStore(counterReducer);
 
 class App extends React.Component {
-  klik = (nappi) => () => {
-
+  klik = (nappi) => {
+    store.dispatch({ type: nappi });
   }
 
   render() {
     return (
       <div>
         <h2>Anna palautetta</h2>
-        <button onClick={this.klik('GOOD')}>Hyvä</button>
-        <button onClick={this.klik('OK')}>Neutraali</button>
-        <button onClick={this.klik('BAD')}>Huono</button>
-        <Statistiikka />
+        <button onClick={() => this.klik('GOOD')}>Hyvä</button>
+        <button onClick={() => this.klik('OK')}>Neutraali</button>
+        <button onClick={() => this.klik('BAD')}>Huono</button>
+        <Statistiikka onZero={() => this.klik('ZERO')}/>
       </div>
     )
   }
