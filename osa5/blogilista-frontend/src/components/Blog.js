@@ -36,18 +36,18 @@ class Blog extends React.Component {
 			}
 		};
 
-		const compact = () => {
+		const titleAndAuthor = () => {
 			return (
-				<div onClick={this.handleExpand}>
+				<div onClick={this.handleExpand} className='title'>
 					{`${this.props.blog.title} by ${this.props.blog.author}`}
-				</div>				
+				</div>	
 			);
 		};
 
 		const expanded = () => {
 			return (
 				<div>
-					<div onClick={this.handleExpand}>
+					<div onClick={this.handleExpand} >
 						{`${this.props.blog.title} by ${this.props.blog.author}`}
 					</div>
 					<div>
@@ -66,8 +66,8 @@ class Blog extends React.Component {
 		};
 		
 		return (
-			<div style={blogStyle}>
-				{this.state.isExpanded ? expanded() : compact()}
+			<div style={blogStyle} className='wrapper'>
+				{this.state.isExpanded ? expanded() : titleAndAuthor()}
 			</div>
 		);
 	}
