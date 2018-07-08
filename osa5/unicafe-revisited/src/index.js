@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { createStore } from 'redux'; 
+import counterReducer from './reducer';
 
 const Statistiikka = () => {
   const palautteita = 0
@@ -46,6 +48,8 @@ const Statistiikka = () => {
   )
 }
 
+const store = createStore(counterReducer);
+
 class App extends React.Component {
   klik = (nappi) => () => {
 
@@ -64,4 +68,9 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const renderApp = () => {
+  ReactDOM.render(<App />, document.getElementById('root'));
+}
+
+renderApp();
+store.subscribe(renderApp);
