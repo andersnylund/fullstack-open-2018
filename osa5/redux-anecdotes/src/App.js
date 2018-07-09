@@ -1,20 +1,27 @@
 import React from 'react';
 
-
 class App extends React.Component {
+
+  vote = (anecdote) => {
+    this.props.store.dispatch({
+      type: 'VOTE',
+      data: anecdote
+    });
+  };
+
   render() {
     const anecdotes = this.props.store.getState()
     return (
       <div>
         <h2>Anecdotes</h2>
-        {anecdotes.map(anecdote=>
+        {anecdotes.map(anecdote =>
           <div key={anecdote.id}>
             <div>
               {anecdote.content} 
             </div>
             <div>
               has {anecdote.votes}
-              <button>vote</button>
+              <button onClick={() => this.vote(anecdote)}>vote</button>
             </div>
           </div>
         )}
