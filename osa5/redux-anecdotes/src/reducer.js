@@ -25,10 +25,17 @@ const reducer = (state = initialState, action) => {
   
   switch(action.type) {
     case 'VOTE':
-      const newAnecdote = { ...action.data };
+      let newAnecdote = { ...action.data };
       newAnecdote.votes = newAnecdote.votes + 1; 
       const newState = [ ...state ];
       return newState.map(a => a.id === newAnecdote.id ? newAnecdote : a).sort((a, b) => a.votes < b.votes);
+    case 'NEW':
+      newAnecdote = {
+        content: action.data,
+        id: getId(),
+        votes: 0
+      };
+      return [ ...state, newAnecdote ];
     default: 
       return state;
   }
