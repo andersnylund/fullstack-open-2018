@@ -1,5 +1,6 @@
 {
-  "anecdotes": [{
+  "anecdotes": [
+    {
       "content": "If it hurts, do it more often",
       "id": "47145",
       "votes": 0
