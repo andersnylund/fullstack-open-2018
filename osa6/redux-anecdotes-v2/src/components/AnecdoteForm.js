@@ -16,9 +16,6 @@ class AnecdoteForm extends React.Component {
 	}
 
 	render() {
-
-		console.log(this.props);
-
 		return (
 			<div>
 				<h2>create new</h2>
