@@ -5,23 +5,24 @@ import { notify } from '../reducers/notificationReducer';
 import anecdoteService from '../services/anecdoteService';
 
 class AnecdoteForm extends React.Component {
-	handleSubmit = async (e) => {
-		e.preventDefault();
-		const content = e.target.anecdote.value;
-		const response = await anecdoteService.create(content);
+	handleSubmit = async (event) => {
+		event.preventDefault();
+		event.persist(); // https://reactjs.org/docs/events.html#event-pooling
+		const content = event.target.anecdote.value;
+		const response = await anecdoteService.post(content);
 		this.props.createAnecdote(response);
 		this.props.notify(`You added anecdote '${content}'`, false);
 		setTimeout(() => {
 			this.props.notify(null, false);
 		}, 5000);
-		e.target.anecdote.value = '';
+		event.target.anecdote.value = '';
 	}
 
 	render() {
 		return (
 			<div>
 				<h2>create new</h2>
-				<form onSubmit={this.handleSubmit}>
+				<form onSubmit={(e) => this.handleSubmit(e)}>
 					<div><input name='anecdote'/></div>
 					<button>create</button>
 				</form>
