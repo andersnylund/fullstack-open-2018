@@ -25,7 +25,7 @@ class AnecdoteList extends React.Component {
 							{anecdote.content}
 						</div>
 						<div>
-              has {anecdote.votes}
+              has {anecdote.votes} votes
 							<button onClick={() => this.vote(anecdote)}>
                 vote
 							</button>

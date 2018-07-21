@@ -9,7 +9,8 @@
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
     "react-scripts": "^1.1.4",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -22,6 +23,7 @@
     "babel-eslint": "^8.2.6",
     "eslint": "^5.1.0",
     "eslint-plugin-jest": "^21.18.0",
-    "eslint-plugin-react": "^7.10.0"
+    "eslint-plugin-react": "^7.10.0",
+    "redux-devtools-extension": "^2.13.5"
   }
 }
