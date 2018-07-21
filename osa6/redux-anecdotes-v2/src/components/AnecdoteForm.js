@@ -2,15 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createAnecdote } from '../reducers/anecdoteReducer';
 import { notify } from '../reducers/notificationReducer';
-import anecdoteService from '../services/anecdoteService';
 
 class AnecdoteForm extends React.Component {
 	handleSubmit = async (event) => {
 		event.preventDefault();
 		event.persist(); // https://reactjs.org/docs/events.html#event-pooling
 		const content = event.target.anecdote.value;
-		const response = await anecdoteService.post(content);
-		this.props.createAnecdote(response);
+		this.props.createAnecdote(content);
 		this.props.notify(`You added anecdote '${content}'`, false);
 		setTimeout(() => {
 			this.props.notify(null, false);

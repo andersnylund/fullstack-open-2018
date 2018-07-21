@@ -15,16 +15,22 @@ const reducer = (store = [], action) => {
 };
 
 export const vote = (anecdote) => {
-	return {
-		type: 'VOTE',
-		anecdote
+	return async (dispatch) => {
+		const response = await anecdoteService.put({ ...anecdote, votes: anecdote.votes + 1 });
+		dispatch({
+			type: 'VOTE',
+			anecdote: response
+		});
 	};
 };
 
-export const createAnecdote = (anecdote) => {
-	return {
-		type: 'CREATE',
-		anecdote
+export const createAnecdote = (content) => {
+	return async (dispatch) => {
+		const response = await anecdoteService.post(content);
+		dispatch({
+			type: 'CREATE',
+			anecdote: response
+		});
 	};
 };
 
