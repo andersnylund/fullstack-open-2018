@@ -7,10 +7,7 @@ class AnecdoteList extends React.Component {
 
 	vote = async (anecdote) => {
 		this.props.vote(anecdote);
-		this.props.notify(`You voted on '${anecdote.content}'`, false);
-		setTimeout(() => {
-			this.props.notify(null, false);
-		}, 5000);
+		this.props.notify(`You voted on '${anecdote.content}'`, false, 5);
 	}
 
 	render() {

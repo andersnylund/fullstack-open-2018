@@ -9,10 +9,7 @@ class AnecdoteForm extends React.Component {
 		event.persist(); // https://reactjs.org/docs/events.html#event-pooling
 		const content = event.target.anecdote.value;
 		this.props.createAnecdote(content);
-		this.props.notify(`You added anecdote '${content}'`, false);
-		setTimeout(() => {
-			this.props.notify(null, false);
-		}, 5000);
+		this.props.notify(`You added anecdote '${content}'`, false, 5);
 		event.target.anecdote.value = '';
 	}
 

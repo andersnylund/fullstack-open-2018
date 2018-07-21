@@ -15,11 +15,20 @@ const reducer = (store = initialNotification, action) => {
 	return store;
 };
 
-export const notify = (message, isError) => {
-	return {
-		type: 'NOTIFY',
-		message,
-		isError
+export const notify = (message, isError, timeout) => {
+	return async (dispatch) => {
+		dispatch({
+			type: 'NOTIFY',
+			message,
+			isError
+		});
+		setTimeout(() => {
+			dispatch({
+				type: 'NOTIFY',
+				message: null,
+				isError: false
+			});
+		}, timeout * 1000);
 	};
 };
 
