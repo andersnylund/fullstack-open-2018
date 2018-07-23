@@ -2,16 +2,36 @@ import React from 'react';
 import {
 	BrowserRouter as Router,
 	Route,
+	NavLink,
 	Link
 } from 'react-router-dom';
 
-const Menu = () => (
-	<div>
-		<Link to='/'>anecdotes</Link>&nbsp;
-		<Link to='/create'>create new</Link>&nbsp;
-		<Link to='/about'>about</Link>&nbsp;
-	</div>
-);
+const Menu = () => {
+
+	const baseStyle = {
+		padding: 20,
+		textDecoration: 'none'
+	};
+
+	const style = {
+		...baseStyle,
+		background: '#aaaaaa',
+	};
+
+	const activeStyle = {
+		...baseStyle,
+		padding: 20,
+		background: '#cccccc',
+	};
+
+	return (
+		<div style={style}>
+			<NavLink exact to='/' style={style} activeStyle={activeStyle}>Anecdotes</NavLink>&nbsp;
+			<NavLink exact to='/create' style={style} activeStyle={activeStyle}>Create new</NavLink>&nbsp;
+			<NavLink exact to='/about' style={style} activeStyle={activeStyle}>About</NavLink>&nbsp;
+		</div>
+	);
+};
 
 const Notification = ({ message }) => {
 	const notificationStyle = {
