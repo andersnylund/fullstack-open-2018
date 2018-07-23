@@ -6,6 +6,8 @@ import {
 	Link
 } from 'react-router-dom';
 
+import { ListItem, List, ListItemText, Divider } from '../node_modules/@material-ui/core';
+
 const Menu = () => {
 
 	const baseStyle = {
@@ -50,18 +52,34 @@ const Notification = ({ message }) => {
 	);
 };
 
-const AnecdoteList = ({ anecdotes }) => (
-	<div>
-		<h2>Anecdotes</h2>
-		<ul>
-			{anecdotes.map(anecdote => {
-				return (<li key={anecdote.id}>
-					<Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-				</li>);
-			})}
-		</ul>
-	</div>
-);
+const AnecdoteList = ({ anecdotes }) => {
+
+	// FIXME this should be a global style. How to do that?
+	const linkStyle = {
+		textDecoration: 'none'
+	};
+
+	return (
+		<div>
+			<h2>Anecdotes</h2>
+			<List>
+				{anecdotes.map(anecdote => {
+					return (
+						<div key={anecdote.id}>
+							<Divider />
+							<Link style={linkStyle} to={`/anecdotes/${anecdote.id}`}>
+								<ListItem button >
+									<ListItemText primary={anecdote.content}></ListItemText>
+								</ListItem>
+							</Link>
+						</div>
+					);
+				})}
+				<Divider />
+			</List>
+		</div>
+	);
+};
 
 const DetailedAnecdote = ({ anecdote }) => {
 	return (
