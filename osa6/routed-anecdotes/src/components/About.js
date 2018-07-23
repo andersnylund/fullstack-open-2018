@@ -42,7 +42,7 @@ const About = (props) => {
 								An anecdote is &quot;a story with a point.&quot;
 							</em>
 						</Typography>
-						<Typography variant='body2'>
+						<Typography variant='body1'>
 							Software engineering is full of excellent anecdotes, at this app you can find the best and add more.
 						</Typography>
 					</Paper>

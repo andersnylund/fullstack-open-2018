@@ -5,36 +5,17 @@ import {
 	NavLink,
 	Link
 } from 'react-router-dom';
-import { ListItem, List, ListItemText, Divider, Grid, Paper, Typography } from '../node_modules/@material-ui/core';
+import { ListItem, List, ListItemText, Divider, Grid, Paper, Typography, withStyles } from '../node_modules/@material-ui/core';
 import About from './components/About';
+import Menu from './components/Menu';
+import AnecdoteList from './components/AnecdoteList';
+import Footer from './components/Footer';
 
-
-const Menu = () => {
-
-	const baseStyle = {
-		padding: 20,
-		textDecoration: 'none'
-	};
-
-	const style = {
-		...baseStyle,
-		background: '#aaaaaa',
-	};
-
-	const activeStyle = {
-		...baseStyle,
-		padding: 20,
-		background: '#cccccc',
-	};
-
-	return (
-		<div style={style}>
-			<NavLink exact to='/' style={style} activeStyle={activeStyle}>Anecdotes</NavLink>&nbsp;
-			<NavLink exact to='/create' style={style} activeStyle={activeStyle}>Create new</NavLink>&nbsp;
-			<NavLink exact to='/about' style={style} activeStyle={activeStyle}>About</NavLink>&nbsp;
-		</div>
-	);
-};
+const styles = () => ({
+	applicationroot: {
+		padding: 20
+	}
+});
 
 const Notification = ({ message }) => {
 	const notificationStyle = {
@@ -53,34 +34,7 @@ const Notification = ({ message }) => {
 	);
 };
 
-const AnecdoteList = ({ anecdotes }) => {
 
-	// FIXME this should be a global style. How to do that?
-	const linkStyle = {
-		textDecoration: 'none'
-	};
-
-	return (
-		<div>
-			<h2>Anecdotes</h2>
-			<List>
-				{anecdotes.map(anecdote => {
-					return (
-						<div key={anecdote.id}>
-							<Divider />
-							<Link style={linkStyle} to={`/anecdotes/${anecdote.id}`}>
-								<ListItem button >
-									<ListItemText primary={anecdote.content}></ListItemText>
-								</ListItem>
-							</Link>
-						</div>
-					);
-				})}
-				<Divider />
-			</List>
-		</div>
-	);
-};
 
 const DetailedAnecdote = ({ anecdote }) => {
 	return (
@@ -91,16 +45,6 @@ const DetailedAnecdote = ({ anecdote }) => {
 		</div>
 	);
 };
-
-
-
-const Footer = () => (
-	<div>
-    Anecdote app for <a href='https://courses.helsinki.fi/fi/TKT21009/121540749'>Full Stack -sovelluskehitys</a>.
-
-    See <a href='https://github.com/mluukkai/routed-anecdotes'>https://github.com/mluukkai/routed-anecdotes</a> for the source code.
-	</div>
-);
 
 class CreateNew extends React.Component {
 	constructor() {
@@ -205,10 +149,12 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className={this.props.classes.applicationroot}>
 				<Router>
 					<div>
-						<h1>Software anecdotes</h1>
+						<Typography variant='display3'>
+							Software anecdotes
+						</Typography>
 						<Menu />
 						{this.state.notification ? <Notification message={this.state.notification}/> : null}
 						<Route exact path='/anecdotes/:id' render={({ match }) =>
@@ -225,4 +171,4 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+export default withStyles(styles)(App);
