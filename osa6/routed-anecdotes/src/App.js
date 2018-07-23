@@ -14,8 +14,17 @@ const Menu = () => (
 );
 
 const Notification = ({ message }) => {
+	const notificationStyle = {
+		color: 'green',
+		padding: 10,
+		borderStyle: 'solid',
+		borderWidth: 1,
+		borderRadius: 10,
+		borderColor: 'green'
+	};
+
 	return (
-		<div>
+		<div style={notificationStyle}>
 			{message}
 		</div>
 	);
