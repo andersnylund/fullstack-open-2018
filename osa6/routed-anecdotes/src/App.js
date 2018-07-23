@@ -6,7 +6,7 @@ import {
 	Link
 } from 'react-router-dom';
 
-import { ListItem, List, ListItemText, Divider } from '../node_modules/@material-ui/core';
+import { ListItem, List, ListItemText, Divider, Grid, Paper } from '../node_modules/@material-ui/core';
 
 const Menu = () => {
 
@@ -91,19 +91,42 @@ const DetailedAnecdote = ({ anecdote }) => {
 	);
 };
 
-const About = () => (
-	<div>
-		<h2>About anecdote app</h2>
-		<p>According to Wikipedia:</p>
+const About = () => {
 
-		<em>An anecdote is a brief, revealing account of an individual person or an incident.
-      Occasionally humorous, anecdotes differ from jokes because their primary purpose is not simply to provoke laughter but to reveal a truth more general than the brief tale itself,
-      such as to characterize a person by delineating a specific quirk or trait, to communicate an abstract idea about a person, place, or thing through the concrete details of a short narrative.
-      An anecdote is &quot;a story with a point.&quot;</em>
+	const containerStyle = {
+		display: 'flex'
+	};
 
-		<p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
-	</div>
-);
+	const imageStyle = {
+		width: '20%',
+		height: '20%'
+	};
+
+	return (
+		<div style={containerStyle}>
+			<Grid container spacing={24}>
+				<Grid item xs={12}>
+					<Paper>
+						<h2>About anecdote app</h2>
+						<p>According to Wikipedia:</p>
+
+						<em>An anecdote is a brief, revealing account of an individual person or an incident.
+							Occasionally humorous, anecdotes differ from jokes because their primary purpose is not simply to provoke laughter but to reveal a truth more general than the brief tale itself,
+							such as to characterize a person by delineating a specific quirk or trait, to communicate an abstract idea about a person, place, or thing through the concrete details of a short narrative.
+							An anecdote is &quot;a story with a point.&quot;</em>
+
+						<p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
+					</Paper>
+				</Grid>
+				<Grid item xs={12}>
+					<Paper>
+						<img style={imageStyle} src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Brian_Kernighan_in_2012_at_Bell_Labs_1.jpg/1200px-Brian_Kernighan_in_2012_at_Bell_Labs_1.jpg" alt=""/>
+					</Paper>
+				</Grid>
+			</Grid>
+		</div>
+	);
+};
 
 const Footer = () => (
 	<div>
