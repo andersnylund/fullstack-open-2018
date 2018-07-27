@@ -7,7 +7,12 @@ import Notification from './components/Notification';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 
+import { notify } from './reducers/notificationReducer';
+import { connect } from 'react-redux';
+
 class App extends React.Component {
+	
+	
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -16,8 +21,6 @@ class App extends React.Component {
 			password: '',
 			loginVisible: false,
 			user: null,
-			notification: null,
-			isError: false,
 			title: '',
 			author: '',
 			url: '',
@@ -40,21 +43,8 @@ class App extends React.Component {
 			this.setState({ blogs });
 		} catch (exception) {
 			console.error({ exception });
-			this.notify('Network error', true);
+			this.props.notify('Network error', true);
 		}
-	}
-
-	
-	notify = (notification, isError) => {
-		this.setState({
-			notification,
-			isError,
-		});
-		setTimeout(() => {
-			this.setState({
-				notification: null
-			});
-		}, 3000);
 	}
 
 
@@ -73,9 +63,10 @@ class App extends React.Component {
 			});
 			window.localStorage.setItem('blogiListaUser', JSON.stringify(result));
 			this.setBlogs();
+			this.props.notify('Logged in', false);
 		} catch (exception) {
 			console.error({exception});
-			this.notify(exception.response.data.error, true);
+			this.props.notify(exception.response.data.error, true);
 		}
 	};
 	
@@ -87,7 +78,7 @@ class App extends React.Component {
 			username: '',
 			password: '',
 		});
-		this.notify('Logged out', false);
+		this.props.notify('Logged out', false);
 	};
 
 
@@ -105,7 +96,7 @@ class App extends React.Component {
 			await blogService.post(newBlog, this.state.user.token);
 			result = await blogService.getAll();
 		} catch (exception) {
-			this.notify('Network error', true);
+			this.props.notify('Network error', true);
 			return;
 		}
 		this.setState({
@@ -114,7 +105,7 @@ class App extends React.Component {
 			author: '',
 			url: '',
 		});
-		this.notify(`Added new blog '${title}'`, false);
+		this.props.notify(`Added new blog '${title}'`, false);
 	}
 
 	handleLike = async (blogToUpdate) => {
@@ -126,17 +117,17 @@ class App extends React.Component {
 			this.setState({
 				blogs: newBlogList.filter(b => b.id !== blogToUpdate.id).concat(updatedBlog)
 			});
-			this.notify(`Liked blog '${blogToUpdate.title}'`);
+			this.props.notify(`Liked blog '${blogToUpdate.title}'`, false);
 		} catch (exception) {
 			console.error({ exception });
-			this.notify(exception.response.data.error, true);
+			this.props.notify(exception.response.data.error, true);
 		}
 	};
 
 	handleDelete = async (blogToDelete) => {
 		if (window.confirm(`Delete '${blogToDelete.title}' by ${blogToDelete.author}?`)) {
 			if (!this.state.user) {
-				this.notify('Login and try again', true);
+				this.props.notify('Login and try again', true);
 				return;
 			}
 			try {
@@ -147,7 +138,7 @@ class App extends React.Component {
 				});
 			} catch (exception) {
 				console.error({ exception });
-				this.notify(exception.response.data.error, true);
+				this.props.notify(exception.response.data.error, true);
 			}
 		}
 	}
@@ -195,10 +186,19 @@ class App extends React.Component {
 						<BlogList blogs={this.state.blogs} user={this.state.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
 					</div>
 				}
-				<Notification message={this.state.notification} isError={this.state.isError}></Notification>
+				<Notification message={this.props.notification.message} isError={this.props.notification.isError}></Notification>
 			</div>
 		);
 	}
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+		notification: state.notificationReducer
+	};
+}
+
+export default connect(
+	mapStateToProps,
+	{ notify }
+)(App);
