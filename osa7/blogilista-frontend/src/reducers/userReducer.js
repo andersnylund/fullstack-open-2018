@@ -1,4 +1,4 @@
-import loginService from '../services/login_service';
+import loginService from '../services/loginService';
 
 const initialState = {
   user: null,
@@ -12,7 +12,7 @@ const reducer = (store = initialState, action) => {
   } else if (action.type === 'LOGOUT') {
     return { ...initialState };
   } else if (action.type === 'CHANGE_LOGINFORM') {
-    return { ...store, [ action.key ]: action.value }
+    return { ...store, [ action.key ]: action.value };
   }
   return store;
 };
@@ -25,8 +25,8 @@ export const login = (username, password) => {
       type: 'LOGIN',
       user: result
     });
-  }
-}
+  };
+};
 
 export const setUser = (user) => {
   return (dispatch) => {
@@ -34,16 +34,16 @@ export const setUser = (user) => {
       type: 'LOGIN',
       user,
     });
-  }
-}
+  };
+};
 
 export const logout = () => {
   return (dispatch) => {
     dispatch({
       type: 'LOGOUT'
     });
-  }
-}
+  };
+};
 
 export const changeLoginFormValue = (key, value) => {
   return (dispatch) => {
@@ -52,7 +52,7 @@ export const changeLoginFormValue = (key, value) => {
       key,
       value,
     });
-  }
-}
+  };
+};
 
 export default reducer;

@@ -1,17 +1,17 @@
 const initialState = {
-	message: null,
-	isError: false
+  message: null,
+  isError: false
 };
 
 const reducer = (store = initialState, action) => {
-	if (action.type === 'NOTIFY') {
+  if (action.type === 'NOTIFY') {
     return {
       message: action.message,
       isError: action.isError
     };
-	}
+  }
 
-	return store;
+  return store;
 };
 
 export const notify = (message, isError) => {
@@ -25,8 +25,8 @@ export const notify = (message, isError) => {
       type: 'NOTIFY',
       message: null,
       isError: false
-    })}, 5000);
+    });}, 5000);
   };
-}
+};
 
 export default reducer;
