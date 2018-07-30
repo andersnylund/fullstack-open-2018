@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import blogService from './services/blog_service';
@@ -7,23 +9,12 @@ import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 
 import { notify } from './reducers/notificationReducer';
-import { login, logout, setUser, changeFormValue } from './reducers/userReducer';
-import { connect } from 'react-redux';
+import { login, logout, setUser, changeLoginFormValue } from './reducers/userReducer';
+import { changeBlogFormValue, setBlogs, addBlog, removeBlog } from './reducers/blogReducer';
 
 class App extends React.Component {
 	
-	
-	constructor(props) {
-		super(props);
-		this.state = {
-			blogs: [],
-			title: '',
-			author: '',
-			url: '',
-		};
-	}
 
-	
 	componentDidMount() {
 		const blogiListaUser = window.localStorage.getItem('blogiListaUser');
 		if (blogiListaUser) {
@@ -35,13 +26,13 @@ class App extends React.Component {
 
 	setBlogs = async () => {
 		try {
-			const blogs = await blogService.getAll();
-			this.setState({ blogs });
+			this.props.setBlogs();
 		} catch (exception) {
 			console.error({ exception });
 			this.props.notify('Network error', true);
 		}
 	}
+
 
 	handleLogin = async (event) => {
 		event.preventDefault();
@@ -56,7 +47,7 @@ class App extends React.Component {
 			console.error({exception});
 			this.props.notify(exception.response.data.error, true);
 		}
-};
+	};
 	
 
 	handleLogOut = () => {
@@ -66,13 +57,13 @@ class App extends React.Component {
 	};
 
 
-	handleChange = (event) => {
-		this.setState({ [event.target.name]: event.target.value, });
+	handleBlogFormChange = (event) => {
+		this.props.changeBlogFormValue(event.target.name, event.target.value);
 	}
 
 
 	handleLoginFormChange = (event) => {
-		this.props.changeFormValue(event.target.name, event.target.value);
+		this.props.changeLoginFormValue(event.target.name, event.target.value);
 	};
 
 
@@ -80,20 +71,12 @@ class App extends React.Component {
 		event.preventDefault();
 		this.blogForm.toggleVisibility();
 		const newBlog = { title, author, url };
-		let result;
 		try {
-			await blogService.post(newBlog, this.props.user.user.token);
-			result = await blogService.getAll();
+			await this.props.addBlog(newBlog, this.props.user.user.token);
 		} catch (exception) {
 			this.props.notify('Network error', true);
 			return;
 		}
-		this.setState({
-			blogs: result,
-			title: '',
-			author: '',
-			url: '',
-		});
 		this.props.notify(`Added new blog '${title}'`, false);
 	}
 
@@ -122,11 +105,7 @@ class App extends React.Component {
 				return;
 			}
 			try {
-				await blogService.remove(blogToDelete, this.props.user.user.token);
-				let newBlogList = [ ...this.state.blogs ];
-				this.setState({
-					blogs: newBlogList.filter(b => b.id !== blogToDelete.id)
-				});
+				this.props.removeBlog(blogToDelete, this.props.user.user.token);
 			} catch (exception) {
 				console.error({ exception });
 				this.props.notify(exception.response.data.error, true);
@@ -156,14 +135,16 @@ class App extends React.Component {
 				<Togglable buttonLabel='Add blog' ref={component => this.blogForm = component}>
 					<BlogForm
 						onNewBlog={this.handleNewBlog} 
-						onChange={this.handleChange}
-						title={this.state.title}
-						author={this.state.author}
-						url={this.state.url}>
+						onChange={this.handleBlogFormChange}
+						title={this.props.blog.title}
+						author={this.props.blog.author}
+						url={this.props.blog.url}>
 					</BlogForm>
 				</Togglable>
 			);
 		};
+
+		console.log('this.props', this.props);
 
 		return (
 			<div>
@@ -174,7 +155,7 @@ class App extends React.Component {
 						<div><strong>{this.props.user.user.username}</strong> logged in</div>
 						<button onClick={this.handleLogOut}>Logout</button>
 						{blogForm()}
-						<BlogList blogs={this.state.blogs} user={this.props.user.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
+						<BlogList blogs={this.props.blog.blogs} user={this.props.user.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
 					</div>
 				}
 				<Notification message={this.props.notification.message} isError={this.props.notification.isError}></Notification>
@@ -188,11 +169,22 @@ const mapStateToProps = (state) => {
 	return {
 		notification: state.notificationReducer,
 		user: state.userReducer,
+		blog: state.blogReducer,
 	};
 }
 
 
 export default connect(
 	mapStateToProps,
-	{ notify, login, logout, setUser, changeFormValue }
+	{ 
+		notify,
+		login,
+		logout,
+		setUser,
+		changeLoginFormValue,
+		setBlogs,
+		changeBlogFormValue,
+		addBlog,
+		removeBlog,
+	}
 )(App);

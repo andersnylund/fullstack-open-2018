@@ -45,7 +45,7 @@ export const logout = () => {
   }
 }
 
-export const changeFormValue = (key, value) => {
+export const changeLoginFormValue = (key, value) => {
   return (dispatch) => {
     dispatch({
       type: 'CHANGE_LOGINFORM',
