@@ -1,56 +1,19 @@
-import loginService from '../services/loginService';
+import userService from '../services/userService';
 
-const initialState = {
-  user: null,
-  username: '',
-  password: '',
-};
-
-const reducer = (store = initialState, action) => {
-  if (action.type === 'LOGIN') {
-    return { ...store, user: action.user };
-  } else if (action.type === 'LOGOUT') {
-    return { ...initialState };
-  } else if (action.type === 'CHANGE_LOGINFORM') {
-    return { ...store, [ action.key ]: action.value };
+const reducer = (store = [], action) => {
+  if (action.type === 'SET_USERS') {
+    return action.users;
   }
+
   return store;
 };
 
-export const login = (username, password) => {
+export const setUsers = () => {
   return async (dispatch) => {
-    const result = await loginService.login({ username, password });
-    window.localStorage.setItem('blogiListaUser', JSON.stringify(result));
+    const users = await userService.getAllUsers();
     dispatch({
-      type: 'LOGIN',
-      user: result
-    });
-  };
-};
-
-export const setUser = (user) => {
-  return (dispatch) => {
-    dispatch({
-      type: 'LOGIN',
-      user,
-    });
-  };
-};
-
-export const logout = () => {
-  return (dispatch) => {
-    dispatch({
-      type: 'LOGOUT'
-    });
-  };
-};
-
-export const changeLoginFormValue = (key, value) => {
-  return (dispatch) => {
-    dispatch({
-      type: 'CHANGE_LOGINFORM',
-      key,
-      value,
+      type: 'SET_USERS',
+      users,
     });
   };
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
@@ -7,10 +8,12 @@ import blogService from './services/blogService';
 import Notification from './components/Notification';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
+import UserList from './components/UserList';
 
 import { notify } from './reducers/notificationReducer';
-import { login, logout, setUser, changeLoginFormValue } from './reducers/userReducer';
+import { loginUser, logoutUser, setUser, changeLoginFormValue } from './reducers/loginReducer';
 import { changeBlogFormValue, setBlogs, addBlog, removeBlog } from './reducers/blogReducer';
+import { setUsers } from './reducers/userReducer';
 
 class App extends React.Component {
 
@@ -21,6 +24,7 @@ class App extends React.Component {
       this.props.setUser(JSON.parse(blogiListaUser));
     }
     this.setBlogs();
+    this.setUsers();
   }
 
 
@@ -34,12 +38,22 @@ class App extends React.Component {
   }
 
 
+  setUsers = async () => {
+    try {
+      this.props.setUsers();
+    } catch (exception) {
+      console.error({ exception });
+      this.props.notify('Network error', true);
+    }
+  }
+
+
   handleLogin = async (event) => {
     event.preventDefault();
     try {
-      await this.props.login(
-        this.props.user.username,
-        this.props.user.password
+      await this.props.loginUser(
+        this.props.login.username,
+        this.props.login.password,
       );
       this.setBlogs();
       this.props.notify('Logged in', false);
@@ -52,7 +66,7 @@ class App extends React.Component {
 
   handleLogOut = () => {
     window.localStorage.removeItem('blogiListaUser');
-    this.props.logout();
+    this.props.logoutUser();
     this.props.notify('Logged out', false);
   };
 
@@ -72,7 +86,7 @@ class App extends React.Component {
     this.blogForm.toggleVisibility();
     const newBlog = { title, author, url };
     try {
-      await this.props.addBlog(newBlog, this.props.user.user.token);
+      await this.props.addBlog(newBlog, this.props.login.user.token);
     } catch (exception) {
       this.props.notify('Network error', true);
       return;
@@ -100,12 +114,12 @@ class App extends React.Component {
 
   handleDelete = async (blogToDelete) => {
     if (window.confirm(`Delete '${blogToDelete.title}' by ${blogToDelete.author}?`)) {
-      if (!this.props.user.user) {
+      if (!this.props.login.user) {
         this.props.notify('Login and try again', true);
         return;
       }
       try {
-        this.props.removeBlog(blogToDelete, this.props.user.user.token);
+        this.props.removeBlog(blogToDelete, this.props.login.user.token);
       } catch (exception) {
         console.error({ exception });
         this.props.notify(exception.response.data.error, true);
@@ -120,8 +134,8 @@ class App extends React.Component {
         <div className='loginForm'>
           <Togglable buttonLabel='Login'>
             <LoginForm
-              username={this.props.user.username}
-              password={this.props.user.password}
+              username={this.props.login.username}
+              password={this.props.login.password}
               onLogin={this.handleLogin}
               onChange={this.handleLoginFormChange}
             />
@@ -144,19 +158,24 @@ class App extends React.Component {
       );
     };
 
-    console.log('this.props', this.props);
-
     return (
       <div>
         <h2>Blogs</h2>
-        {this.props.user.user === null ?
+        {this.props.login.user === null ?
           loginForm() :
-          <div>
-            <div><strong>{this.props.user.user.username}</strong> logged in</div>
-            <button onClick={this.handleLogOut}>Logout</button>
-            {blogForm()}
-            <BlogList blogs={this.props.blog.blogs} user={this.props.user.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
-          </div>
+          <Router>
+            <div>
+              <div><strong>{this.props.login.user.username}</strong> logged in</div>
+              <button onClick={this.handleLogOut}>Logout</button>
+              {blogForm()}
+              <Route exact path="/" render={() =>
+                <BlogList blogs={this.props.blog.blogs} user={this.props.login.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
+              } />
+              <Route exact path="/users" render={() =>
+                <UserList users={this.props.users}/>
+              }/>
+            </div>
+          </Router>
         }
         <Notification message={this.props.notification.message} isError={this.props.notification.isError}></Notification>
       </div>
@@ -168,8 +187,9 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     notification: state.notificationReducer,
-    user: state.userReducer,
+    login: state.loginReducer,
     blog: state.blogReducer,
+    users: state.userReducer,
   };
 };
 
@@ -178,13 +198,14 @@ export default connect(
   mapStateToProps,
   {
     notify,
-    login,
-    logout,
+    loginUser,
+    logoutUser,
     setUser,
     changeLoginFormValue,
     setBlogs,
     changeBlogFormValue,
     addBlog,
     removeBlog,
+    setUsers,
   }
 )(App);

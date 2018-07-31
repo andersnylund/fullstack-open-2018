@@ -12,7 +12,7 @@ describe('<App />', () => {
     beforeAll(() => {
       app = mount(<App />);
     });
-  
+
     it('renders only loginform', () => {
       app.update();
       const loginFormComponent = app.find('.loginForm');
@@ -34,13 +34,13 @@ describe('<App />', () => {
 
     it('renders blogs', () => {
       app.update();
-  
+
       const blogComponents = app.find(Blog);
       // console.log(blogComponents.debug());
       expect(blogComponents.length).toEqual(blogService.blogs.length);
     });
   });
 
-  
+
 
 });

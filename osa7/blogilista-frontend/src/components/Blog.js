@@ -19,7 +19,7 @@ class Blog extends React.Component {
     const blogStyle = {
       paddingTop: 10,
       paddingLeft: 2,
-      border: 'solid',      
+      border: 'solid',
       borderWidth: 1,
       marginBottom: 5
     };
@@ -40,7 +40,7 @@ class Blog extends React.Component {
       return (
         <div onClick={this.handleExpand} className='title'>
           {`${this.props.blog.title} by ${this.props.blog.author}`}
-        </div>	
+        </div>
       );
     };
 
@@ -61,10 +61,10 @@ class Blog extends React.Component {
             {`added by ${this.props.blog.user ? this.props.blog.user.name : 'unknown'}`}
           </div>
           {likeButton()}
-        </div>	
+        </div>
       );
     };
-    
+
     return (
       <div style={blogStyle} className='wrapper'>
         {this.state.isExpanded ? expanded() : titleAndAuthor()}
