@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import Blog from './components/Blog';
 import BlogList from './components/BlogList';
@@ -153,6 +153,19 @@ class App extends React.Component {
       );
     };
 
+    const navigationMenu = () => {
+      const style = {
+        padding: '0px 10px 10px 0px',
+      };
+
+      return (
+        <div style={style}>
+          <Link to='/' style={style}>Blogs</Link>
+          <Link to='/users' style={style}>Users</Link>
+        </div>
+      );
+    };
+
     return (
       <div>
         <h2>Blogs</h2>
@@ -160,6 +173,7 @@ class App extends React.Component {
           loginForm() :
           <Router>
             <div>
+              {navigationMenu()}
               <div><strong>{this.props.login.user.username}</strong> logged in</div>
               <button onClick={this.handleLogOut}>Logout</button>
               {blogForm()}
