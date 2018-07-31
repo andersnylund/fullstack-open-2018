@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
-import blogService from './services/blogService';
 import Notification from './components/Notification';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
@@ -12,7 +11,7 @@ import UserList from './components/UserList';
 
 import { notify } from './reducers/notificationReducer';
 import { loginUser, logoutUser, setUser, changeLoginFormValue } from './reducers/loginReducer';
-import { changeBlogFormValue, setBlogs, addBlog, removeBlog } from './reducers/blogReducer';
+import { changeBlogFormValue, setBlogs, addBlog, removeBlog, likeBlog } from './reducers/blogReducer';
 import { setUsers } from './reducers/userReducer';
 import User from './components/User';
 
@@ -98,13 +97,7 @@ class App extends React.Component {
 
   handleLike = async (blogToUpdate) => {
     try {
-      const updatedBlog = { ...blogToUpdate };
-      updatedBlog.likes = blogToUpdate.likes + 1;
-      await blogService.put(updatedBlog);
-      let newBlogList = [ ...this.state.blogs ];
-      this.setState({
-        blogs: newBlogList.filter(b => b.id !== blogToUpdate.id).concat(updatedBlog)
-      });
+      this.props.likeBlog(blogToUpdate);
       this.props.notify(`Liked blog '${blogToUpdate.title}'`, false);
     } catch (exception) {
       console.error({ exception });
@@ -210,6 +203,7 @@ export default connect(
     changeBlogFormValue,
     addBlog,
     removeBlog,
+    likeBlog,
     setUsers,
   }
 )(App);

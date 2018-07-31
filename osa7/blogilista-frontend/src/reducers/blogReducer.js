@@ -28,6 +28,11 @@ const reducer = (store = initialState, action) => {
       ...store,
       [action.key]: action.value,
     };
+  } else if (action.type === 'LIKE_BLOG') {
+    return {
+      ...store,
+      blogs: [ ...store.blogs.filter(b => b.id !== action.blog.id), action.blog ],
+    };
   }
   return store;
 };
@@ -68,6 +73,20 @@ export const removeBlog = (blog, token) => {
     dispatch({
       type: 'REMOVE_BLOG',
       blog
+    });
+  };
+};
+
+export const likeBlog = (blog) => {
+  return async (dispatch) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    };
+    await blogService.put(updatedBlog);
+    dispatch({
+      type: 'LIKE_BLOG',
+      blog: updatedBlog,
     });
   };
 };
