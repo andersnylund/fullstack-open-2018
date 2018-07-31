@@ -14,6 +14,7 @@ import { notify } from './reducers/notificationReducer';
 import { loginUser, logoutUser, setUser, changeLoginFormValue } from './reducers/loginReducer';
 import { changeBlogFormValue, setBlogs, addBlog, removeBlog } from './reducers/blogReducer';
 import { setUsers } from './reducers/userReducer';
+import User from './components/User';
 
 class App extends React.Component {
 
@@ -171,9 +172,12 @@ class App extends React.Component {
               <Route exact path="/" render={() =>
                 <BlogList blogs={this.props.blog.blogs} user={this.props.login.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
               } />
-              <Route exact path="/users" render={() =>
-                <UserList users={this.props.users}/>
+              <Route exact path="/users" render={({ history }) =>
+                <UserList users={this.props.users} history={history}/>
               }/>
+              <Route exact path="/users/:id" render={({ match }) =>
+                this.props.users ? <User user={this.props.users.find(u => u.id === match.params.id)} /> : null
+              } />
             </div>
           </Router>
         }
