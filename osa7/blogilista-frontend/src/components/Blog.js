@@ -35,6 +35,12 @@ const Blog = ({ user, blog, onLike, onDelete }) => {
         {`added by ${blog.user ? blog.user.name : 'unknown'}`}
       </div>
       {likeButton()}
+      <div>
+        <h3>Comments</h3>
+        <ul>
+          {blog.comments.map((c, index) => <li key={index}>{c}</li>)}
+        </ul>
+      </div>
     </div>
   );
 };
