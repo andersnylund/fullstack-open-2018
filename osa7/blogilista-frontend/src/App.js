@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+import Blog from './components/Blog';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
@@ -162,14 +163,27 @@ class App extends React.Component {
               <div><strong>{this.props.login.user.username}</strong> logged in</div>
               <button onClick={this.handleLogOut}>Logout</button>
               {blogForm()}
-              <Route exact path="/" render={() =>
-                <BlogList blogs={this.props.blog.blogs} user={this.props.login.user} onLike={this.handleLike} onDelete={this.handleDelete}></BlogList>
+              <Route exact path='/' render={() =>
+                <BlogList
+                  blogs={this.props.blog.blogs}
+                  user={this.props.login.user}
+                  onLike={this.handleLike}
+                  onDelete={this.handleDelete}
+                />
               } />
-              <Route exact path="/users" render={({ history }) =>
+              <Route exact path='/users' render={({ history }) =>
                 <UserList users={this.props.users} history={history}/>
               }/>
-              <Route exact path="/users/:id" render={({ match }) =>
+              <Route exact path='/users/:id' render={({ match }) =>
                 this.props.users ? <User user={this.props.users.find(u => u.id === match.params.id)} /> : null
+              } />
+              <Route exact path='/blogs/:id' render={({ match }) =>
+                <Blog
+                  user={this.props.login.user}
+                  blog={this.props.blog.blogs.find(b => b.id === match.params.id)}
+                  onLike={this.handleLike}
+                  onDelete={this.handleDelete}
+                />
               } />
             </div>
           </Router>
