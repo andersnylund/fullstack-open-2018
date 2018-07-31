@@ -121,7 +121,7 @@ blogRouter.put('/:id', async (req, res) => {
       new: true,
     });
     if (result) {
-      return res.json(result);
+      return res.json(Blog.format(result));
     } else {
       return res.status(404).json({
         error: 'Not found',
@@ -131,6 +131,35 @@ blogRouter.put('/:id', async (req, res) => {
     if (process.env.NODE_ENV !== 'test') {
       console.log(exception);
     }
+    return res.status(400).json({
+      error: 'Malformed id',
+    });
+  }
+});
+
+blogRouter.post('/:id/comments', async (req, res) => {
+  const comment = req.body.comment;
+  const id = req.params.id;
+
+  if (!comment) {
+    return res.status(400).json({
+      error: 'comment not specified',
+    });
+  }
+
+  try {
+    const oldBlog = await Blog.findById(id);
+    if (!oldBlog) {
+      return res.status(404).json({
+        error: 'Blog not found',
+      });
+    }
+    const newBlog = Object.assign(oldBlog);
+    newBlog.comments = [ ...oldBlog.comments, comment ];
+    const result = await Blog.findByIdAndUpdate(id, newBlog, { new: true });
+    return res.json(Blog.format(result));
+  } catch (exception) {
+    console.log({ exception, });
     return res.status(400).json({
       error: 'Malformed id',
     });
