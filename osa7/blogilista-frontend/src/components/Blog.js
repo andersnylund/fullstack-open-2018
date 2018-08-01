@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import CommentForm from '../components/CommentForm';
+
 const Blog = ({ user, blog, onLike, onDelete }) => {
 
   if (!blog) {
@@ -40,6 +42,7 @@ const Blog = ({ user, blog, onLike, onDelete }) => {
         <ul>
           {blog.comments.map((c, index) => <li key={index}>{c}</li>)}
         </ul>
+        <CommentForm selectedBlog={blog}/>
       </div>
     </div>
   );

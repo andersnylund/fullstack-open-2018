@@ -13,8 +13,8 @@ const post = async (blog, token) => {
     url: baseUrl,
     headers: {
       'Authorization': `bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   const result = await axios(request);
@@ -27,8 +27,8 @@ const put = async (blog) => {
     data: blog,
     url: `${baseUrl}/${blog.id}`,
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
   const result = await axios(request);
   return result.data;
@@ -39,8 +39,23 @@ const remove = async (blog, token) => {
     method: 'DELETE',
     url: `${baseUrl}/${blog.id}`,
     headers: {
-      'Authorization': `bearer ${token}`
-    }
+      'Authorization': `bearer ${token}`,
+    },
+  };
+  const result = await axios(request);
+  return result.data;
+};
+
+const comment = async (blog, comment) => {
+  const request = {
+    method: 'POST',
+    url: `${baseUrl}/${blog.id}/comments`,
+    data: {
+      comment,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
   const result = await axios(request);
   return result.data;
@@ -51,4 +66,5 @@ export default {
   post,
   put,
   remove,
+  comment,
 };

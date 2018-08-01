@@ -5,6 +5,7 @@ const initialState = {
   title: '',
   author: '',
   url: '',
+  comment: '',
 };
 
 const reducer = (store = initialState, action) => {
@@ -16,12 +17,12 @@ const reducer = (store = initialState, action) => {
   } else if (action.type === 'ADD_BLOG') {
     return {
       ...store,
-      blogs: [ ...store.blogs ].concat(action.blog),
+      blogs: [ ...store.blogs, ].concat(action.blog),
     };
   } else if (action.type === 'REMOVE_BLOG') {
     return {
       ...store,
-      blogs: [ ...store.blogs ].filter(b => b.id !== action.blog.id),
+      blogs: [ ...store.blogs, ].filter(b => b.id !== action.blog.id),
     };
   } else if (action.type === 'CHANGE_BLOGFORM') {
     return {
@@ -31,7 +32,17 @@ const reducer = (store = initialState, action) => {
   } else if (action.type === 'LIKE_BLOG') {
     return {
       ...store,
-      blogs: [ ...store.blogs.filter(b => b.id !== action.blog.id), action.blog ],
+      blogs: [ ...store.blogs.filter(b => b.id !== action.blog.id), action.blog, ],
+    };
+  } else if (action.type === 'CHANGE_COMMENTFORM') {
+    return {
+      ...store,
+      comment: action.comment,
+    };
+  } else if (action.type === 'COMMENT') {
+    return {
+      ...store,
+      blogs: [ ...store.blogs.filter(b => b.id !== action.blog.id), action.blog, ],
     };
   }
   return store;
@@ -72,7 +83,7 @@ export const removeBlog = (blog, token) => {
     await blogService.remove(blog, token);
     dispatch({
       type: 'REMOVE_BLOG',
-      blog
+      blog,
     });
   };
 };
@@ -87,6 +98,23 @@ export const likeBlog = (blog) => {
     dispatch({
       type: 'LIKE_BLOG',
       blog: updatedBlog,
+    });
+  };
+};
+
+export const changeCommentFormValue = (comment) => {
+  return {
+    type: 'CHANGE_COMMENTFORM',
+    comment,
+  };
+};
+
+export const addComment = (blog, comment) => {
+  return async (dispatch) => {
+    const result = await blogService.comment(blog, comment);
+    dispatch({
+      type: 'COMMENT',
+      blog: result,
     });
   };
 };

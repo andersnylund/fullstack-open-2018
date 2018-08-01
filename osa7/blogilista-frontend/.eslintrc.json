@@ -36,6 +36,10 @@
             "error",
             "always"
         ],
+        "comma-dangle": [
+            2,
+            "always"
+        ],
         "no-trailing-spaces": "error",
         "no-console": "off"
     }
