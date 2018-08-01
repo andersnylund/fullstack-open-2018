@@ -5,6 +5,7 @@ const {
 } = require('../index');
 const api = supertest(app);
 const User = require('../models/user');
+const Blog = require('../models/blog');
 const {
   initialUsers,
   usersInDB,
@@ -15,6 +16,7 @@ describe('testing user api', () => {
 
     beforeEach(async () => {
       await User.remove({});
+      await Blog.remove({});
     });
 
     test('assert that saving user is possible', async () => {

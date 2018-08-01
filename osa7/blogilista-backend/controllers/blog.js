@@ -155,8 +155,8 @@ blogRouter.post('/:id/comments', async (req, res) => {
       });
     }
     const newBlog = Object.assign(oldBlog);
-    newBlog.comments = [ ...oldBlog.comments, comment ];
-    const result = await Blog.findByIdAndUpdate(id, newBlog, { new: true });
+    newBlog.comments = [ ...oldBlog.comments, comment, ];
+    const result = await Blog.findByIdAndUpdate(id, newBlog, { new: true, });
     return res.json(Blog.format(result));
   } catch (exception) {
     console.log({ exception, });

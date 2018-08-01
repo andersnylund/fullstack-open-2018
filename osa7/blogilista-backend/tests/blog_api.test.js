@@ -5,10 +5,13 @@ const {
 } = require('../index');
 const api = supertest(app);
 const Blog = require('../models/blog');
+const User = require('../models/user');
 const {
   blogsInDB,
   initialBlogs,
+  initialUsers,
   loginAsUser1,
+  loginAsUser2,
 } = require('./test_helper');
 
 describe('when having initial blogs', () => {
@@ -16,9 +19,15 @@ describe('when having initial blogs', () => {
   beforeEach(async () => {
     try {
       await Blog.remove({});
+      await User.remove({});
       for (let blog of initialBlogs) {
         let newBlog = new Blog(blog);
         await newBlog.save();
+      }
+      for (let user of initialUsers) {
+        await api
+          .post('/api/users')
+          .send(user);
       }
     } catch (exception) {
       console.log(exception);
@@ -155,20 +164,32 @@ describe('when having initial blogs', () => {
     await api
       .delete(`/api/blogs/${blogsBefore[0].id}`)
       .set('Authorization', `bearer ${token}`)
-      .expect(403);
+      .expect(204);
 
     const blogsAfter = await blogsInDB();
 
-    expect(blogsAfter.length).toBe(blogsBefore.length);
+    expect(blogsAfter.length).toBe(blogsBefore.length - 1);
   });
 
   test('assert that deleting someone elses blog is not possible', async () => {
-    const token = await loginAsUser1(api);
+    const token1 = await loginAsUser1(api);
+    const token2 = await loginAsUser2(api);
+
+    const user2blog = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${token2}`)
+      .send({
+        author: 'Anders',
+        url: '',
+        title: '',
+      })
+      .expect(201);
+
     const blogsBefore = await blogsInDB();
 
     await api
-      .delete(`/api/blogs/${blogsBefore[0].id}`)
-      .set('Authorization', `bearer ${token}`)
+      .delete(`/api/blogs/${user2blog.body.id}`)
+      .set('Authorization', `bearer ${token1}`)
       .expect(403);
 
     const blogsAfter = await blogsInDB();
@@ -187,23 +208,22 @@ describe('when having initial blogs', () => {
   test('assert that updating a blog is possible', async () => {
     const blogBefore = (await blogsInDB())[0];
 
-    const modifiedBlog = blogBefore;
-    modifiedBlog.author = '';
-    modifiedBlog.url = '';
-    modifiedBlog.title = '';
-    modifiedBlog.likes = 0;
+    const modifiedBlog = {
+      ...blogBefore,
+      likes: 1,
+    };
 
     const result = await api
       .put(`/api/blogs/${blogBefore.id}`)
       .send(modifiedBlog)
       .expect(200);
 
-    expect(JSON.stringify(Blog.format(result.body)))
-      .toEqual(JSON.stringify(modifiedBlog));
+
+    expect(JSON.stringify(result.body)).toEqual(JSON.stringify(modifiedBlog));
 
     const blogAfter = (await blogsInDB())[0];
 
-    expect(blogAfter).toMatchObject(modifiedBlog);
+    expect(JSON.stringify(blogAfter)).toEqual(JSON.stringify(modifiedBlog));
   });
 
   test('assert that updating blog with valid but non existing id returns 404', async () => {

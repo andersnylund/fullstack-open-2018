@@ -68,36 +68,22 @@ const usersInDB = async () => {
   return users.map(User.format);
 };
 
-/**
- * @returns a valid jwt-token
- * @param {*} api the api use when creating the user
- */
 const loginAsUser1 = async (api) => {
-  await User.remove({});
-
-  await api
-    .post('/api/users')
-    .send({
-      username: 'user1',
-      name: 'User 1',
-      password: 'password1',
-      adult: true,
-    });
-
-  await api
-    .post('/api/users')
-    .send({
-      username: 'user2',
-      name: 'User 2',
-      password: 'password2',
-      adult: true,
-    });
-
   return (await api
     .post('/api/login')
     .send({
       username: 'user1',
       password: 'password1',
+    })).body.token;
+};
+
+
+const loginAsUser2 = async (api) => {
+  return (await api
+    .post('/api/login')
+    .send({
+      username: 'user2',
+      password: 'password2',
     })).body.token;
 };
 
@@ -108,4 +94,5 @@ module.exports = {
   blogsInDB,
   usersInDB,
   loginAsUser1,
+  loginAsUser2,
 };
