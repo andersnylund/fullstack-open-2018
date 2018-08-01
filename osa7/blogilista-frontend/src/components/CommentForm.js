@@ -4,6 +4,8 @@ import { connect, } from 'react-redux';
 import { changeCommentFormValue, addComment, } from '../reducers/blogReducer';
 import { notify, } from '../reducers/notificationReducer';
 
+import Button from '@material-ui/core/Button';
+
 class CommentForm extends Component {
 
   changeValueTo = (value) => {
@@ -26,7 +28,7 @@ class CommentForm extends Component {
             value={this.props.blog.comment}
             onChange={(e) => this.changeValueTo(e.target.value)}
           />
-          <button type='submit'>Add comment</button>
+          <Button size='small' variant='contained' type='submit'>Add comment</Button>
         </form>
       </div>
     );

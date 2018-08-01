@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const LoginForm = ({ onLogin, onChange, username, password }) => {
+import Button from '@material-ui/core/Button';
+
+const LoginForm = ({ onLogin, onChange, username, password, }) => {
   return (
     <div>
       <form method='post' onSubmit={onLogin}>
@@ -23,7 +25,7 @@ const LoginForm = ({ onLogin, onChange, username, password }) => {
           />
         </div>
         <div>
-          <button type='submit'>Login</button>
+          <Button size='small' variant='contained' type='submit'>Login</Button>
         </div>
       </form>
     </div>

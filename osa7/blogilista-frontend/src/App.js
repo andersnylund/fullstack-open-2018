@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { connect, } from 'react-redux';
+import { BrowserRouter as Router, Route, } from 'react-router-dom';
 
 import Blog from './components/Blog';
 import BlogList from './components/BlogList';
@@ -10,11 +10,13 @@ import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 import UserList from './components/UserList';
 
-import { notify } from './reducers/notificationReducer';
-import { loginUser, logoutUser, setUser, changeLoginFormValue } from './reducers/loginReducer';
-import { changeBlogFormValue, setBlogs, addBlog, removeBlog, likeBlog } from './reducers/blogReducer';
-import { setUsers } from './reducers/userReducer';
+import { notify, } from './reducers/notificationReducer';
+import { loginUser, logoutUser, setUser, changeLoginFormValue, } from './reducers/loginReducer';
+import { changeBlogFormValue, setBlogs, addBlog, removeBlog, likeBlog, } from './reducers/blogReducer';
+import { setUsers, } from './reducers/userReducer';
 import User from './components/User';
+import NavigationMenu from './components/NavigationMenu';
+import Header from './components/Header';
 
 class App extends React.Component {
 
@@ -147,36 +149,21 @@ class App extends React.Component {
             onChange={this.handleBlogFormChange}
             title={this.props.blog.title}
             author={this.props.blog.author}
-            url={this.props.blog.url}>
+            url={this.props.blog.url}
+          >
           </BlogForm>
         </Togglable>
       );
     };
 
-    const navigationMenu = () => {
-      const style = {
-        padding: '0px 10px 10px 0px',
-      };
-
-      return (
-        <div style={style}>
-          <Link to='/' style={style}>Blogs</Link>
-          <Link to='/users' style={style}>Users</Link>
-        </div>
-      );
-    };
-
     return (
       <div>
-        <h2>Blogs</h2>
+        <Header user={this.props.login.user} onLogout={this.handleLogOut}/>
         {this.props.login.user === null ?
           loginForm() :
           <Router>
             <div>
-              {navigationMenu()}
-              <div><strong>{this.props.login.user.username}</strong> logged in</div>
-              <button onClick={this.handleLogOut}>Logout</button>
-              {blogForm()}
+              <NavigationMenu />
               <Route exact path='/' render={() =>
                 <BlogList
                   blogs={this.props.blog.blogs}
@@ -199,6 +186,7 @@ class App extends React.Component {
                   onDelete={this.handleDelete}
                 />
               } />
+              {blogForm()}
             </div>
           </Router>
         }

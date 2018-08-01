@@ -1,33 +1,40 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { List, ListItem, ListItemText, Divider, withStyles, } from '@material-ui/core';
 
-const BlogList = ({ blogs }) => {
+const styles = {
+  link: {
+    textDecoration: 'none',
+  },
+};
+
+const BlogList = (props) => {
+  const { blogs, classes, } = props;
 
   const sorted = blogs.sort((a, b) => {
     return a.likes < b.likes;
   });
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  };
-
   return (
     <div>
-      {sorted.map(blog =>
-        <div key={blog.id} onClick={this.handleExpand} style={blogStyle}>
-          <Link to={`/blogs/${blog.id}`}>{`${blog.title} by ${blog.author}`}</Link>
-        </div>)}
+      <Divider />
+      <List>
+        {sorted.map(blog =>
+          <ListItem button key={blog.id} onClick={this.handleExpand}>
+            <Link to={`/blogs/${blog.id}`} className={classes.link}>
+              <ListItemText primary={`${blog.title} by ${blog.author}`} />
+            </Link>
+          </ListItem>)}
+      </List>
+      <Divider />
     </div>
   );
 };
 
 BlogList.propTypes = {
   blogs: PropTypes.array.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
-export default BlogList;
+export default withStyles(styles)(BlogList);

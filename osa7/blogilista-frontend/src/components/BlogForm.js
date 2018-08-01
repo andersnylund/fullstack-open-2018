@@ -1,9 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const BlogForm = ({ onNewBlog, onChange, title, author, url}) => {
+import Button from '@material-ui/core/Button';
+import { withStyles, } from '../../node_modules/@material-ui/core';
+
+const styles = {
+  wrapper: {
+    padding: '10px',
+  },
+};
+
+const BlogForm = ({ onNewBlog, onChange, title, author, url, classes, }) => {
   return (
-    <div>
+    <div className={classes.wrapper}>
       <form method='post' onSubmit={(event) => onNewBlog(event, title, author, url)}>
         <table>
           <tbody>
@@ -21,7 +30,7 @@ const BlogForm = ({ onNewBlog, onChange, title, author, url}) => {
             </tr>
           </tbody>
         </table>
-        <button type='submit'>Add blog</button>
+        <Button size='small' variant='contained' type='submit'>Add blog</Button>
       </form>
     </div>
   );
@@ -32,7 +41,8 @@ BlogForm.propTypes = {
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
-export default BlogForm;
+export default withStyles(styles)(BlogForm);

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import CommentForm from '../components/CommentForm';
 
+import Button from '@material-ui/core/Button';
+
 const Blog = ({ user, blog, onLike, onDelete }) => {
 
   if (!blog) {
@@ -13,7 +15,7 @@ const Blog = ({ user, blog, onLike, onDelete }) => {
     if(user && (!blog.user || blog.user.username === user.username)) {
       return (
         <div>
-          <button onClick={() => onDelete(blog)}>Delete</button>
+          <Button size='small' variant='contained' onClick={() => onDelete(blog)}>Delete</Button>
         </div>
       );
     } else {
@@ -31,7 +33,7 @@ const Blog = ({ user, blog, onLike, onDelete }) => {
       </div>
       <div>
         {`${blog.likes} likes`}
-        <button onClick={() => onLike(blog)}>Like</button>
+        <Button size='small' variant='contained' onClick={() => onLike(blog)}>Like</Button>
       </div>
       <div>
         {`added by ${blog.user ? blog.user.name : 'unknown'}`}
