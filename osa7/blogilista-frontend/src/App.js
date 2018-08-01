@@ -130,7 +130,7 @@ class App extends React.Component {
     const loginForm = () => {
       return (
         <div className='loginForm'>
-          <Togglable buttonLabel='Login'>
+          <Togglable buttonLabel='Login' buttonClassName='loginToggleButton'>
             <LoginForm
               username={this.props.login.username}
               password={this.props.login.password}

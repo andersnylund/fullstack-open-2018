@@ -14,6 +14,7 @@ const LoginForm = ({ onLogin, onChange, username, password, }) => {
             value={username}
             onChange={onChange}
             name='username'
+            className='usernameInput'
           />
         </div>
         <div>
@@ -22,10 +23,11 @@ const LoginForm = ({ onLogin, onChange, username, password, }) => {
             value={password}
             onChange={onChange}
             name='password'
+            className='passwordInput'
           />
         </div>
         <div>
-          <Button size='small' variant='contained' type='submit'>Login</Button>
+          <Button size='small' variant='contained' type='submit' className='loginButton'>Login</Button>
         </div>
       </form>
     </div>

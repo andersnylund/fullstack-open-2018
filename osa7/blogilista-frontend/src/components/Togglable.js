@@ -16,18 +16,17 @@ class Togglable extends React.Component {
   }
 
   render() {
-    const hideWhenVisible = { display: this.state.visible ? 'none' : '', };
-    const showWhenVisible = { display: this.state.visible ? '' : 'none', };
-
     return (
       <div>
-        <div style={hideWhenVisible}>
-          <Button size='small' variant='contained' onClick={this.toggleVisibility}>{this.props.buttonLabel}</Button>
-        </div>
-        <div style={showWhenVisible}>
-          {this.props.children}
-          <Button size='small' variant='contained' onClick={this.toggleVisibility}>Cancel</Button>
-        </div>
+        {this.state.visible ?
+          <div>
+            {this.props.children}
+            <Button size='small' variant='contained' onClick={this.toggleVisibility} className={this.props.buttonClassName}>Cancel</Button>
+          </div> :
+          <div>
+            <Button size='small' variant='contained' onClick={this.toggleVisibility} className={this.props.buttonClassName}>{this.props.buttonLabel}</Button>
+          </div>
+        }
       </div>
     );
   }
@@ -36,6 +35,7 @@ class Togglable extends React.Component {
 Togglable.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
   children: PropTypes.object.isRequired,
+  buttonClassName: PropTypes.string.isRequired,
 };
 
 export default Togglable;
