@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SimpleBlog = ({ blog, onClick }) => (
+const SimpleBlog = ({ blog, onClick, }) => (
   <div className='wrapper'>
     <div className='content'>
       {blog.title} {blog.author}
@@ -15,7 +15,7 @@ const SimpleBlog = ({ blog, onClick }) => (
 
 SimpleBlog.propTypes = {
   blog: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 };
 
 export default SimpleBlog;

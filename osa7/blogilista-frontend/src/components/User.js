@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const User = ({ user }) => {
+const User = ({ user, }) => {
   return user ?
     <div>
       <h2>{user.name}</h2>
@@ -12,5 +13,8 @@ const User = ({ user }) => {
     null;
 };
 
+User.propTypes = {
+  user: PropTypes.object.isRequired,
+};
 
 export default User;

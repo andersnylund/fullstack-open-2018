@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, } from 'enzyme';
 import SimpleBlog from './SimpleBlog';
 
 describe('<SimpleBlog />', () => {
@@ -7,7 +7,7 @@ describe('<SimpleBlog />', () => {
     const blog = {
       title: 'Title',
       author: 'Author',
-      likes: 2
+      likes: 2,
     };
 
     const mockHandler = jest.fn();
@@ -27,7 +27,7 @@ describe('<SimpleBlog />', () => {
     const blog = {
       title: 'Title',
       author: 'Author',
-      likes: 2
+      likes: 2,
     };
 
     const mockHandler = jest.fn();

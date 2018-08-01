@@ -27,7 +27,7 @@ const Header = (props) => {
         <Typography variant='display3'>Blogs</Typography>
       </Grid>
       <Grid item xs={6}>
-        {user !== null ?
+        {user ?
           <div className={classes.info}>
             <Typography variant='subheading' className={classes.infoItem}><strong>{user.username}</strong> logged in</Typography>
             <Button size='small' variant='contained' onClick={onLogout} className={classes.infoItem}>Logout</Button>

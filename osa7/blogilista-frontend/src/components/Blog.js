@@ -5,7 +5,7 @@ import CommentForm from '../components/CommentForm';
 
 import Button from '@material-ui/core/Button';
 
-const Blog = ({ user, blog, onLike, onDelete }) => {
+const Blog = ({ user, blog, onLike, onDelete, }) => {
 
   if (!blog) {
     return null;
@@ -56,7 +56,7 @@ Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   onLike: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  user: PropTypes.any
+  user: PropTypes.any,
 };
 
 export default Blog;

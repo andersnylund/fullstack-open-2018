@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect, } from 'react-redux';
 import { BrowserRouter as Router, Route, } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import Blog from './components/Blog';
 import BlogList from './components/BlogList';
@@ -35,7 +36,7 @@ class App extends React.Component {
     try {
       this.props.setBlogs();
     } catch (exception) {
-      console.error({ exception });
+      console.error({ exception, });
       this.props.notify('Network error', true);
     }
   }
@@ -45,7 +46,7 @@ class App extends React.Component {
     try {
       this.props.setUsers();
     } catch (exception) {
-      console.error({ exception });
+      console.error({ exception, });
       this.props.notify('Network error', true);
     }
   }
@@ -61,7 +62,7 @@ class App extends React.Component {
       this.setBlogs();
       this.props.notify('Logged in', false);
     } catch (exception) {
-      console.error({exception});
+      console.error({ exception, });
       this.props.notify(exception.response.data.error, true);
     }
   };
@@ -87,7 +88,7 @@ class App extends React.Component {
   handleNewBlog = async (event, title, author, url) => {
     event.preventDefault();
     this.blogForm.toggleVisibility();
-    const newBlog = { title, author, url };
+    const newBlog = { title, author, url, };
     try {
       await this.props.addBlog(newBlog, this.props.login.user.token);
     } catch (exception) {
@@ -103,7 +104,7 @@ class App extends React.Component {
       this.props.likeBlog(blogToUpdate);
       this.props.notify(`Liked blog '${blogToUpdate.title}'`, false);
     } catch (exception) {
-      console.error({ exception });
+      console.error({ exception, });
       this.props.notify(exception.response.data.error, true);
     }
   };
@@ -118,7 +119,7 @@ class App extends React.Component {
       try {
         this.props.removeBlog(blogToDelete, this.props.login.user.token);
       } catch (exception) {
-        console.error({ exception });
+        console.error({ exception, });
         this.props.notify(exception.response.data.error, true);
       }
     }
@@ -172,13 +173,13 @@ class App extends React.Component {
                   onDelete={this.handleDelete}
                 />
               } />
-              <Route exact path='/users' render={({ history }) =>
+              <Route exact path='/users' render={({ history, }) =>
                 <UserList users={this.props.users} history={history}/>
               }/>
-              <Route exact path='/users/:id' render={({ match }) =>
+              <Route exact path='/users/:id' render={({ match, }) =>
                 this.props.users ? <User user={this.props.users.find(u => u.id === match.params.id)} /> : null
               } />
-              <Route exact path='/blogs/:id' render={({ match }) =>
+              <Route exact path='/blogs/:id' render={({ match, }) =>
                 <Blog
                   user={this.props.login.user}
                   blog={this.props.blog.blogs.find(b => b.id === match.params.id)}
@@ -206,6 +207,23 @@ const mapStateToProps = (state) => {
   };
 };
 
+App.propTypes = {
+  notification: PropTypes.object.isRequired,
+  blog: PropTypes.object.isRequired,
+  users: PropTypes.array.isRequired,
+  login: PropTypes.object.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired,
+  likeBlog: PropTypes.func.isRequired,
+  setUsers: PropTypes.func.isRequired,
+  loginUser: PropTypes.func.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired,
+  changeLoginFormValue: PropTypes.func.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  changeBlogFormValue: PropTypes.func.isRequired,
+  addBlog: PropTypes.func.isRequired,
+};
 
 export default connect(
   mapStateToProps,
