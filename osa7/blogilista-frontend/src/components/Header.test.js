@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow, mount, } from 'enzyme';
 import Header from './Header';
 import { Button, } from '@material-ui/core';
+import renderer from 'react-test-renderer';
 
 describe('<Header />', () => {
 
@@ -27,6 +28,13 @@ describe('<Header />', () => {
     const button = headerComponent.find(Button);
     button.simulate('click');
     expect(handleLogout.mock.calls.length).toEqual(1);
+  });
+
+  it('renders correctly', () => {
+    const tree = renderer
+      .create(<Header user={user} onLogout={handleLogout} />)
+      .toJSON();
+    expect(tree).toMatchSnapshot();
   });
 
 });

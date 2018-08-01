@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Header /> renders correctly 1`] = `
+<div
+  className="MuiGrid-container-4 MuiGrid-spacing-xs-24-28"
+>
+  <div
+    className="MuiGrid-item-5 MuiGrid-grid-xs-6-38 Header-header-1"
+  >
+    <h1
+      className="MuiTypography-root-101 MuiTypography-display3-103"
+    >
+      Blogs
+    </h1>
+  </div>
+  <div
+    className="MuiGrid-item-5 MuiGrid-grid-xs-6-38"
+  >
+    <div
+      className="Header-info-2"
+    >
+      <h3
+        className="MuiTypography-root-101 MuiTypography-subheading-108 Header-infoItem-3"
+      >
+        <strong>
+          test
+        </strong>
+         logged in
+      </h3>
+      <button
+        className="MuiButtonBase-root-150 MuiButton-root-126 MuiButton-contained-135 MuiButton-raised-138 MuiButton-sizeSmall-147 Header-infoItem-3"
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex="0"
+        type="button"
+      >
+        <span
+          className="MuiButton-label-127"
+        >
+          Logout
+        </span>
+        <span
+          className="MuiTouchRipple-root-153"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
