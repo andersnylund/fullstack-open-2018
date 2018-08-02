@@ -51,7 +51,7 @@ const comment = async (blog, commentText) => {
     method: 'POST',
     url: `${baseUrl}/${blog.id}/comments`,
     data: {
-      commentText,
+      'comment': commentText,
     },
     headers: {
       'Content-Type': 'application/json',
