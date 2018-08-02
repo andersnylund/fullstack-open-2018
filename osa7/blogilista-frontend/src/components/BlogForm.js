@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
-import { withStyles, } from '../../node_modules/@material-ui/core';
+import { withStyles, } from '@material-ui/core';
 
 const styles = {
   wrapper: {

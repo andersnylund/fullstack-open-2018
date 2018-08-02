@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import CommentForm from '../components/CommentForm';
+import CommentForm from './CommentForm';
 
 import Button from '@material-ui/core/Button';
 

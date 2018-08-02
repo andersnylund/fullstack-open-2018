@@ -1,13 +1,13 @@
 const initialState = {
   message: null,
-  isError: false
+  isError: false,
 };
 
 const reducer = (store = initialState, action) => {
   if (action.type === 'NOTIFY') {
     return {
       message: action.message,
-      isError: action.isError
+      isError: action.isError,
     };
   }
 
@@ -19,12 +19,12 @@ export const notify = (message, isError) => {
     dispatch({
       type: 'NOTIFY',
       message,
-      isError
+      isError,
     });
     setTimeout(() => { dispatch({
       type: 'NOTIFY',
       message: null,
-      isError: false
+      isError: false,
     });}, 5000);
   };
 };

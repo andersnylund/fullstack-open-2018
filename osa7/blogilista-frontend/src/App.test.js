@@ -22,7 +22,7 @@ describe.skip('<App />', () => {
           <App />
         </Provider>
       );
-      console.log(app.debug());
+      //console.log(app.debug());
     });
 
     it('renders only loginform', () => {

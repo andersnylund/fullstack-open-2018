@@ -36,7 +36,6 @@ class App extends React.Component {
     try {
       this.props.setBlogs();
     } catch (exception) {
-      console.error({ exception, });
       this.props.notify('Network error', true);
     }
   }
@@ -46,7 +45,6 @@ class App extends React.Component {
     try {
       this.props.setUsers();
     } catch (exception) {
-      console.error({ exception, });
       this.props.notify('Network error', true);
     }
   }
@@ -62,7 +60,6 @@ class App extends React.Component {
       this.setBlogs();
       this.props.notify('Logged in', false);
     } catch (exception) {
-      console.error({ exception, });
       this.props.notify(exception.response.data.error, true);
     }
   };
@@ -104,7 +101,6 @@ class App extends React.Component {
       this.props.likeBlog(blogToUpdate);
       this.props.notify(`Liked blog '${blogToUpdate.title}'`, false);
     } catch (exception) {
-      console.error({ exception, });
       this.props.notify(exception.response.data.error, true);
     }
   };
@@ -119,7 +115,6 @@ class App extends React.Component {
       try {
         this.props.removeBlog(blogToDelete, this.props.login.user.token);
       } catch (exception) {
-        console.error({ exception, });
         this.props.notify(exception.response.data.error, true);
       }
     }
@@ -144,7 +139,7 @@ class App extends React.Component {
 
     const blogForm = () => {
       return (
-        <Togglable buttonLabel='Add blog' ref={component => this.blogForm = component}>
+        <Togglable buttonLabel='Add blog' ref={component => this.blogForm = component} buttonClassName='formToggleButton'>
           <BlogForm
             onNewBlog={this.handleNewBlog}
             onChange={this.handleBlogFormChange}

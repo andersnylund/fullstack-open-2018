@@ -1,9 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Button, Grid, Typography, withStyles, } from '@material-ui/core';
 
-const styles = {
+const styles: any = {
   header: {
     textAlign: 'left',
   },
@@ -17,16 +16,28 @@ const styles = {
   },
 };
 
-const Header = (props) => {
+interface IProps {
+  user: {
+    username: string,
+  },
+  classes: {
+    container: string,
+    header: string,
+    infoItem: string,
+    info: string
+  },
+  onLogout: any
+}
 
-  const { user, classes, onLogout, } = props;
+
+const Header: React.SFC<IProps> = ({ user, classes, onLogout, }) => {
 
   return (
-    <Grid container spacing={24} className={classes.container}>
-      <Grid item xs={6} className={classes.header}>
+    <Grid container={true} spacing={24} className={classes.container}>
+      <Grid item={true} xs={6} className={classes.header}>
         <Typography variant='display3'>Blogs</Typography>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item={true} xs={6}>
         {user ?
           <div className={classes.info}>
             <Typography variant='subheading' className={classes.infoItem}><strong>{user.username}</strong> logged in</Typography>
@@ -36,12 +47,6 @@ const Header = (props) => {
       </Grid>
     </Grid>
   );
-};
-
-Header.propTypes = {
-  user: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-  onLogout: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(Header);

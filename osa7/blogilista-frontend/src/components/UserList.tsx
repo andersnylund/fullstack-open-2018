@@ -1,7 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const UserList = ({ users, history }) => {
+
+interface IProps {
+  users: IUser[],
+  history: any
+}
+
+interface IUser {
+  id: any,
+  name: string,
+  blogs: object[]
+}
+
+
+const UserList: React.SFC<IProps> = ({ users }) => {
 
   const list = users.map(u => {
     return (

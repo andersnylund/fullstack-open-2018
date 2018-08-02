@@ -46,12 +46,12 @@ const remove = async (blog, token) => {
   return result.data;
 };
 
-const comment = async (blog, comment) => {
+const comment = async (blog, commentText) => {
   const request = {
     method: 'POST',
     url: `${baseUrl}/${blog.id}/comments`,
     data: {
-      comment,
+      commentText,
     },
     headers: {
       'Content-Type': 'application/json',
